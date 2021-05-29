@@ -1,0 +1,146 @@
+{
+ "actions": [],
+ "autoname": "CTC-LT-.####",
+ "creation": "2021-05-27 21:02:02.202518",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "patient",
+  "full_name",
+  "test_name",
+  "appointment",
+  "email",
+  "location",
+  "column_break_5",
+  "report_preference",
+  "test_date",
+  "test_time",
+  "amended_from",
+  "status",
+  "date_of_birth",
+  "phone_number",
+  "report_status"
+ ],
+ "fields": [
+  {
+   "fieldname": "patient",
+   "fieldtype": "Link",
+   "label": "Patient",
+   "options": "Patient CTC"
+  },
+  {
+   "fieldname": "test_name",
+   "fieldtype": "Data",
+   "label": "Test Name"
+  },
+  {
+   "fieldname": "appointment",
+   "fieldtype": "Datetime",
+   "label": "Appointment"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Draft\nSubmitted",
+   "read_only": 1
+  },
+  {
+   "fieldname": "report_status",
+   "fieldtype": "Select",
+   "label": "Report Status",
+   "options": "Negative\nPositive\nFaulty"
+  },
+  {
+   "fieldname": "column_break_5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "report_preference",
+   "fieldtype": "Select",
+   "label": "Report Preference",
+   "options": "Email\nSMS\nPrint"
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Data",
+   "label": "Location"
+  },
+  {
+   "default": "Today",
+   "fieldname": "test_date",
+   "fieldtype": "Date",
+   "label": "Test Date"
+  },
+  {
+   "default": "now",
+   "fieldname": "test_time",
+   "fieldtype": "Time",
+   "label": "Test Time"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "CTC Lab Test",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fetch_from": "patient.full_name",
+   "fieldname": "full_name",
+   "fieldtype": "Data",
+   "label": "Full Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "patient.email",
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "options": "Email",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "patient.date_of_birth",
+   "fieldname": "date_of_birth",
+   "fieldtype": "Datetime",
+   "label": "Date of Birth",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "patient.phone_number",
+   "fieldname": "phone_number",
+   "fieldtype": "Data",
+   "label": "Phone Number",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2021-05-27 21:46:10.936077",
+ "modified_by": "Administrator",
+ "module": "Corona Test Center",
+ "name": "CTC Lab Test",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}
