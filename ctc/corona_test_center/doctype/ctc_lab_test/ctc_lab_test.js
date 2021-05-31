@@ -6,7 +6,33 @@ frappe.ui.form.on('CTC Lab Test', {
 	refresh: function(frm) {
 		if ((!frm.is_new()) && (frm.doc.docstatus==1) ) {
 			frm.add_custom_button(__("Send Email"),()=>{
-				frappe.msgprint("Please this is WIP")
+				frappe.call({
+					method: 'frappe.core.doctype.communication.email.make',
+					args: {
+						recipients: frm.doc.email,
+						content:__(`
+						Good day,  ${frm.full_name} 
+						As the test result from the test shows You have tested ${frm.report_status}
+						Stay healthy!
+						
+						Your CoronaTestPoint team
+						Elmshorner Str. 25
+						25421 Pinneberg`),
+						subject: frm.doc.name,
+						doctype: "CTC Lab Test",          //name of doctype (is single doctype)
+						name: frm.doc.name,
+						send_email: 1,
+						communication_medium: "Email",
+						},async: true,
+					callback: function() {
+						frappe.msgprint({
+							title: __('Email'),
+							indicator: 'green',
+							message: __('Email Sent successfully')
+						});
+						d.hide();
+					}
+				});
 			})
 			frm.add_custom_button(__("Send SMS"),()=>{
 				var number = frm.doc.phone_number;

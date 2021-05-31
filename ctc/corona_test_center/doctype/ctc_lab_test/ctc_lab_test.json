@@ -16,7 +16,6 @@
   "street",
   "column_break_5",
   "report_preference",
-  "test_date",
   "test_time",
   "amended_from",
   "status",
@@ -30,8 +29,10 @@
   {
    "fieldname": "patient",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Patient",
-   "options": "CTC Patient"
+   "options": "CTC Patient",
+   "reqd": 1
   },
   {
    "fieldname": "test_name",
@@ -70,19 +71,16 @@
   {
    "fieldname": "location",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "Location",
-   "options": "McDonalds\nShishaBar"
-  },
-  {
-   "default": "Today",
-   "fieldname": "test_date",
-   "fieldtype": "Date",
-   "label": "Test Date"
+   "options": "McDonalds\nShishaBar",
+   "reqd": 1
   },
   {
    "fieldname": "test_time",
-   "fieldtype": "Time",
-   "label": "Test Time"
+   "fieldtype": "Datetime",
+   "label": "Test Date",
+   "options": "now"
   },
   {
    "fieldname": "amended_from",
@@ -154,7 +152,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-05-31 09:11:26.517634",
+ "modified": "2021-05-31 20:40:56.912727",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Lab Test",

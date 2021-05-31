@@ -15,6 +15,17 @@ class CTCPatient(Document):
 		self.validate_zip_code()
 		self.validate_country_code()
 		self.create_labtest()
+	
+
+
+	def autoname(self):
+		count = 0
+		propose=self.full_name
+		while frappe.db.exists("CTC Patient",propose):
+			count+=1
+			propose=self.full_name+f"-{count}"
+		self.name=propose
+		
 		
 
 

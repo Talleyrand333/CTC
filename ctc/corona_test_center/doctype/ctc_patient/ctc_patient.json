@@ -1,6 +1,5 @@
 {
  "actions": [],
- "autoname": "CTC-PT-.####",
  "creation": "2021-05-27 20:54:02.247627",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -11,6 +10,8 @@
   "date_of_birth",
   "full_name",
   "email",
+  "location",
+  "report_preference",
   "column_break_5",
   "phone_number",
   "street",
@@ -18,9 +19,7 @@
   "towncity",
   "create_lab_test",
   "appointment",
-  "test_name",
-  "location",
-  "report_preference"
+  "test_name"
  ],
  "fields": [
   {
@@ -49,6 +48,7 @@
    "fieldname": "full_name",
    "fieldtype": "Data",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Full Name",
    "read_only": 1
   },
@@ -122,7 +122,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-05-30 21:38:51.165574",
+ "modified": "2021-05-31 21:43:36.678435",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Patient",
@@ -141,6 +141,7 @@
    "write": 1
   }
  ],
+ "search_fields": "full_name,first_name,last_name,phone_number",
  "sort_field": "modified",
  "sort_order": "DESC",
  "track_changes": 1
