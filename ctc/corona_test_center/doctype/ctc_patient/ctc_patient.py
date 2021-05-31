@@ -29,7 +29,14 @@ class CTCPatient(Document):
 				'appointment':self.appointment,
 				'report_preference':self.report_preference,
 				'location':self.location,
-				'intro_email_sent':0
+				'intro_email_sent':0,
+				'full_name':self.full_name,
+				'email':self.email,
+				'date_of_birth':self.date_of_birth,
+				'phone_number':self.phone_number,
+				'town':self.towncity,
+				'zipcode':self.zip_code,
+				'street':self.street
 			}
 			doc = frappe.get_doc(patient_doc)
 			doc.save()
@@ -39,7 +46,7 @@ class CTCPatient(Document):
 	def validate_zip_code(self):
 		value = self.zip_code.strip()
 		if len(value)!=5:
-			frappe.throw(_("Zipcode must be 5 digits"))
+			frappe.throw(_("Zipcode must be 5 characters"))
 
 
 	def validate_country_code(self):

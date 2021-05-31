@@ -12,6 +12,8 @@
   "appointment",
   "email",
   "location",
+  "zipcode",
+  "street",
   "column_break_5",
   "report_preference",
   "test_date",
@@ -22,9 +24,7 @@
   "phone_number",
   "report_status",
   "town",
-  "intro_email_sent",
-  "zipcode",
-  "street"
+  "intro_email_sent"
  ],
  "fields": [
   {
@@ -140,19 +140,21 @@
    "fetch_from": "patient.zip_code",
    "fieldname": "zipcode",
    "fieldtype": "Data",
-   "label": "Zip code"
+   "label": "Zip code",
+   "read_only": 1
   },
   {
    "fetch_from": "patient.street",
    "fieldname": "street",
    "fieldtype": "Data",
-   "label": "Street"
+   "label": "Street",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-05-31 02:35:38.037351",
+ "modified": "2021-05-31 09:11:26.517634",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Lab Test",
