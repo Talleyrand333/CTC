@@ -4,9 +4,9 @@
 frappe.ui.form.on('CTC Lab Test', {
 	
 	refresh: function(frm) {
-		if (!frm.is_new()) {
+		if ((!frm.is_new()) && (frm.doc.docstatus==1) ) {
 			frm.add_custom_button(__("Send Email"),()=>{
-				frm.call('send_result_email')
+				frappe.msgprint("Please this is WIP")
 			})
 			frm.add_custom_button(__("Send SMS"),()=>{
 				var number = frm.doc.phone_number;

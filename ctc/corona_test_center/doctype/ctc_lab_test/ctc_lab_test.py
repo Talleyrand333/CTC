@@ -27,7 +27,7 @@ class CTCLabTest(Document):
 
 	def send_email_to_patient(self):
 		print("HELLOO")
-		return
+		
 		
 
 	@frappe.whitelist()		
