@@ -1,16 +1,54 @@
 # Copyright (c) 2021, Talleyrand and contributors
 # For license information, please see license.txt
 
+from frappe import _
 import frappe
 from frappe.model.document import Document
 from six import string_types
 import json,datetime
 
-class PatientCTC(Document):
+class CTCPatient(Document):
 	pass
 
 	def validate(self):
 		self.full_name = ' '.join(filter(lambda x: x, [self.first_name, self.last_name]))
+		self.validate_zip_code()
+		self.validate_country_code()
+		self.create_labtest()
+		
+
+
+
+	
+	def create_labtest(self):
+		if self.create_lab_test and self.is_new():
+			patient_doc = {
+				'doctype':'CTC Lab Test',
+				'patient':self.name,
+				'test_name':self.test_name,
+				'appointment':self.appointment,
+				'report_preference':self.report_preference,
+				'location':self.location,
+				'intro_email_sent':0
+			}
+			doc = frappe.get_doc(patient_doc)
+			doc.save()
+			frappe.msgprint(f"Lab Test {doc.name} created!")
+	
+
+	def validate_zip_code(self):
+		value = self.zip_code.strip()
+		if len(value)!=5:
+			frappe.throw(_("Zipcode must be 5 digits"))
+
+
+	def validate_country_code(self):
+		if '+49' not in self.phone_number.split(" "):
+			if not self.phone_number[0]=="+":
+				self.phone_number = "+49 "+self.phone_number
+
+			
+			
 
 
 	

@@ -15,7 +15,12 @@
   "phone_number",
   "street",
   "zip_code",
-  "towncity"
+  "towncity",
+  "create_lab_test",
+  "appointment",
+  "test_name",
+  "location",
+  "report_preference"
  ],
  "fields": [
   {
@@ -45,8 +50,7 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Full Name",
-   "read_only": 1,
-   "reqd": 1
+   "read_only": 1
   },
   {
    "fieldname": "column_break_5",
@@ -81,14 +85,47 @@
    "fieldtype": "Data",
    "label": "Email",
    "options": "Email"
+  },
+  {
+   "default": "0",
+   "fieldname": "create_lab_test",
+   "fieldtype": "Check",
+   "label": "Create Lab Test"
+  },
+  {
+   "depends_on": "eval:doc.create_lab_test==1",
+   "fieldname": "appointment",
+   "fieldtype": "Datetime",
+   "label": "Appointment"
+  },
+  {
+   "depends_on": "eval:doc.create_lab_test==1",
+   "fieldname": "test_name",
+   "fieldtype": "Select",
+   "label": "Test Name",
+   "options": "Kostenloser B\u00fcrgertest"
+  },
+  {
+   "depends_on": "eval:doc.create_lab_test==1",
+   "fieldname": "location",
+   "fieldtype": "Select",
+   "label": "Location",
+   "options": "McDonalds\nShishaBar"
+  },
+  {
+   "depends_on": "eval:doc.create_lab_test==1",
+   "fieldname": "report_preference",
+   "fieldtype": "Select",
+   "label": "Report Preference",
+   "options": "Email\nSMS\nPrint"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-05-29 16:37:59.606452",
+ "modified": "2021-05-30 21:38:51.165574",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
- "name": "Patient CTC",
+ "name": "CTC Patient",
  "owner": "Administrator",
  "permissions": [
   {

@@ -20,19 +20,22 @@
   "status",
   "date_of_birth",
   "phone_number",
-  "report_status"
+  "report_status",
+  "town",
+  "intro_email_sent"
  ],
  "fields": [
   {
    "fieldname": "patient",
    "fieldtype": "Link",
    "label": "Patient",
-   "options": "Patient CTC"
+   "options": "CTC Patient"
   },
   {
    "fieldname": "test_name",
-   "fieldtype": "Data",
-   "label": "Test Name"
+   "fieldtype": "Select",
+   "label": "Test Name",
+   "options": "Kostenloser B\u00fcrgertest"
   },
   {
    "fieldname": "appointment",
@@ -43,7 +46,7 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Draft\nSubmitted",
+   "options": "Draft\nSubmitted\nCanceled",
    "read_only": 1
   },
   {
@@ -64,8 +67,9 @@
   },
   {
    "fieldname": "location",
-   "fieldtype": "Data",
-   "label": "Location"
+   "fieldtype": "Select",
+   "label": "Location",
+   "options": "McDonalds\nShishaBar"
   },
   {
    "default": "Today",
@@ -74,7 +78,6 @@
    "label": "Test Date"
   },
   {
-   "default": "now",
    "fieldname": "test_time",
    "fieldtype": "Time",
    "label": "Test Time"
@@ -106,7 +109,7 @@
   {
    "fetch_from": "patient.date_of_birth",
    "fieldname": "date_of_birth",
-   "fieldtype": "Datetime",
+   "fieldtype": "Date",
    "label": "Date of Birth",
    "read_only": 1
   },
@@ -116,12 +119,26 @@
    "fieldtype": "Data",
    "label": "Phone Number",
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "intro_email_sent",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Intro Email Sent"
+  },
+  {
+   "fetch_from": "patient.towncity",
+   "fieldname": "town",
+   "fieldtype": "Data",
+   "label": "Town",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-05-27 21:46:10.936077",
+ "modified": "2021-05-31 01:20:28.636269",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Lab Test",

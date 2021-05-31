@@ -4,5 +4,5 @@
 # import frappe
 import unittest
 
-class TestPatientCTC(unittest.TestCase):
+class TestCTCPatient(unittest.TestCase):
 	pass
