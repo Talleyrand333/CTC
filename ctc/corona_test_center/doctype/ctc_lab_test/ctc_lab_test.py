@@ -27,7 +27,6 @@ class CTCLabTest(Document):
 
 
 	def validate(self):
-		self.send_email_to_patient()
 		self.fetch_date()
 		if self._action!="submit":
 			self.status="Draft"
