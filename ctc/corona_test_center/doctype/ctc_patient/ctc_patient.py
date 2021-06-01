@@ -34,6 +34,7 @@ class CTCPatient(Document):
 	
 	def create_labtest(self):
 		if self.create_lab_test and self.is_new():
+			self.autoname()
 			patient_doc = {
 				'doctype':'CTC Lab Test',
 				'patient':self.name,

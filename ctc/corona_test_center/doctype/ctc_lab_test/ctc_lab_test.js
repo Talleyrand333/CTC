@@ -11,8 +11,8 @@ frappe.ui.form.on('CTC Lab Test', {
 					args: {
 						recipients: frm.doc.email,
 						content:__(`
-						Good day,  ${frm.full_name} 
-						As the test result from the test shows You have tested ${frm.report_status}
+						Good day,  ${frm.doc.full_name} 
+						As the test result from the test shows You have tested ${frm.doc.report_status}
 						Stay healthy!
 						
 						Your CoronaTestPoint team

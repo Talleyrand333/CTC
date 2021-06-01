@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "autoname": "[full_name]",
  "creation": "2021-05-27 20:54:02.247627",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -129,7 +130,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-06-01 15:09:53.217185",
+ "modified": "2021-06-01 16:10:16.734006",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Patient",

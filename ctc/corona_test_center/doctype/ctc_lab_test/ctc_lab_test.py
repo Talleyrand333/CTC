@@ -41,7 +41,7 @@ class CTCLabTest(Document):
 				"recipients": [self.email],
 				"message": _(f"You have been registered for your Lab test. the ID is {self.name}, Please come for the test with this ID "),
 				"subject": _('Registration Complete'),
-				# "attachments": [frappe.attach_print("CTC Lab Test", self.name)],
+				"attachments": [frappe.attach_print("CTC Lab Test", self.name)],
 				"reference_doctype": self.doctype,
 				"reference_name": self.name
 		}
