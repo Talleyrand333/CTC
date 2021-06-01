@@ -25,6 +25,7 @@ class CTCPatient(Document):
 			count+=1
 			propose=self.full_name+f"-{count}"
 		self.name=propose
+		frappe.db.commit()
 		
 		
 
@@ -56,6 +57,9 @@ class CTCPatient(Document):
 
 	def validate_zip_code(self):
 		value = self.zip_code.strip()
+		for each in value:
+			if not each.isdigit():
+				frappe.throw("Zipcode must be made up of numbers")
 		if len(value)!=5:
 			frappe.throw(_("Zipcode must be 5 characters"))
 
