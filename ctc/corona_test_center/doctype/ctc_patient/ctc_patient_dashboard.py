@@ -7,10 +7,6 @@ def get_data():
 		'fieldname': 'patient',
 		'transactions': [
 			{
-				'label': _('Appointments and Patient Encounters'),
-				'items': ['Patient Appointment']
-			},
-			{
 				'label': _('Lab Tests'),
  				'items': ['CTC Lab Test']
 			},

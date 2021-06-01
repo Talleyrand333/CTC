@@ -15,12 +15,12 @@
   "column_break_5",
   "phone_number",
   "street",
+  "street_number",
   "zip_code",
   "towncity",
   "create_lab_test",
   "appointment",
-  "test_name",
-  "street_number"
+  "test_name"
  ],
  "fields": [
   {
@@ -123,12 +123,13 @@
   {
    "fieldname": "street_number",
    "fieldtype": "Data",
-   "label": "Street Number"
+   "label": "Street Number",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-06-01 14:49:32.946333",
+ "modified": "2021-06-01 15:09:53.217185",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Patient",

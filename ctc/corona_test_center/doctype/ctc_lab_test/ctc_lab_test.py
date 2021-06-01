@@ -31,23 +31,21 @@ class CTCLabTest(Document):
 		self.fetch_date()
 		if self._action!="submit":
 			self.status="Draft"
-	# 		if self.is_new():
-	# 			self.send_email_to_patient()
+			if self.is_new():
+				self.send_email_to_patient()
 				
 			
 
-	# def send_email_to_patient(self):
-	# 	self.intro_email_sent=0
-	# 	self.intro_email_sent=1
-	# 	# email_args = {
-	# 	# 		"recipients": [self.email],
-	# 	# 		"message": _(f"You have been registered for your Lab test. the ID is {self.name}, Please come for the test with this ID "),
-	# 	# 		"subject": _('Registration Complete'),
-	# 	# 		# "attachments": [frappe.attach_print("CTC Lab Test", self.name)],
-	# 	# 		"reference_doctype": self.doctype,
-	# 	# 		"reference_name": self.name
-	# 	# 		}
-	# 	# enqueue(method=frappe.sendmail, queue='short', timeout=300, async=True, **email_args)
+	def send_email_to_patient(self):
+		email_args = {
+				"recipients": [self.email],
+				"message": _(f"You have been registered for your Lab test. the ID is {self.name}, Please come for the test with this ID "),
+				"subject": _('Registration Complete'),
+				# "attachments": [frappe.attach_print("CTC Lab Test", self.name)],
+				"reference_doctype": self.doctype,
+				"reference_name": self.name
+		}
+		enqueue(method=frappe.sendmail, queue='short', timeout=300, **email_args)
 
 		
 		
