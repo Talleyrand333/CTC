@@ -19,7 +19,8 @@
   "towncity",
   "create_lab_test",
   "appointment",
-  "test_name"
+  "test_name",
+  "street_number"
  ],
  "fields": [
   {
@@ -65,7 +66,7 @@
   {
    "fieldname": "street",
    "fieldtype": "Data",
-   "label": "Street",
+   "label": "Street Name",
    "reqd": 1
   },
   {
@@ -118,11 +119,16 @@
    "fieldtype": "Select",
    "label": "Report Preference",
    "options": "Email\nSMS\nPrint"
+  },
+  {
+   "fieldname": "street_number",
+   "fieldtype": "Data",
+   "label": "Street Number"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-05-31 21:43:36.678435",
+ "modified": "2021-06-01 14:49:32.946333",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Patient",
