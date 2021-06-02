@@ -53,7 +53,8 @@ class CTCPatient(Document):
 			}
 			doc = frappe.get_doc(patient_doc)
 			doc.save()
-			frappe.msgprint(f"Lab Test {doc.name} created!")
+			frappe.db.commit()
+			frappe.msgprint(_(f"Lab Test {doc.name} created!"))
 	
 
 	def validate_zip_code(self):
