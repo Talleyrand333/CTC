@@ -10,6 +10,7 @@ import pytz
 class CTCLabTest(Document):
 
 	def on_submit(self):
+		self.fetch_date()
 		self.status = "Submitted"
 	
 	def on_cancel(self):
@@ -21,15 +22,7 @@ class CTCLabTest(Document):
 		tz = pytz.timezone('Europe/Berlin')
 		now=datetime.datetime.now(tz)
 		self.test_time = datetime.datetime(now.year,now.month,now.day,now.hour,now.minute,now.second)
-		
-
-
-	def validate(self):
-		self.fetch_date()
-		# if self.is_new():
-		# 	self.send_email_to_patient()
-				
-			
+						
 
 	def send_email_to_patient(self):
 		email_args = {
