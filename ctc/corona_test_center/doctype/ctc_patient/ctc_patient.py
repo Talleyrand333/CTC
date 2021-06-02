@@ -8,7 +8,6 @@ from six import string_types
 import json,datetime
 
 class CTCPatient(Document):
-	pass
 
 	def validate(self):
 		self.full_name = ' '.join(filter(lambda x: x, [self.first_name, self.last_name]))
@@ -19,6 +18,7 @@ class CTCPatient(Document):
 
 
 	def autoname(self):
+		self.full_name = ' '.join(filter(lambda x: x, [self.first_name, self.last_name]))
 		count = 0
 		propose=self.full_name
 		while frappe.db.exists("CTC Patient",propose):
@@ -27,14 +27,12 @@ class CTCPatient(Document):
 		self.name=propose
 		frappe.db.commit()
 		
-		
-
-
 
 	
 	def create_labtest(self):
 		if self.create_lab_test and self.is_new():
-			self.autoname()
+			if not self.name:
+				self.autoname()
 			patient_doc = {
 				'doctype':'CTC Lab Test',
 				'patient':self.name,
@@ -53,8 +51,8 @@ class CTCPatient(Document):
 			}
 			doc = frappe.get_doc(patient_doc)
 			doc.save()
-			frappe.db.commit()
 			frappe.msgprint(_(f"Lab Test {doc.name} created!"))
+			
 	
 
 	def validate_zip_code(self):
