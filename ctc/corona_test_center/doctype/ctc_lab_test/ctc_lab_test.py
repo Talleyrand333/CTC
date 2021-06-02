@@ -25,8 +25,7 @@ class CTCLabTest(Document):
 
 
 	def validate(self):
-		pass
-		# self.fetch_date()
+		self.fetch_date()
 		# if self.is_new():
 		# 	self.send_email_to_patient()
 				
