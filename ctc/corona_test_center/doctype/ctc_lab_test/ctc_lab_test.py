@@ -23,17 +23,11 @@ class CTCLabTest(Document):
 		self.test_time = datetime.datetime(now.year,now.month,now.day,now.hour,now.minute,now.second)
 		
 
-		
-	def after_save(self):
-		if self.is_new():
-				pass
-				# self.send_email_to_patient()
 
 	def validate(self):
 		self.fetch_date()
-		if self._action!="submit":
-			self.status="Draft"
-			
+		if self.is_new():
+			self.send_email_to_patient()
 				
 			
 
