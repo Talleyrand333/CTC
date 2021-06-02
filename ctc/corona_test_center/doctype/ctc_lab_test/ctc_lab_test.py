@@ -10,12 +10,13 @@ import pytz
 class CTCLabTest(Document):
 
 	def on_submit(self):
-		self.fetch_date()
 		self.status = "Submitted"
 	
 	def on_cancel(self):
 		self.status = "Canceled"
 	
+	def before_submit(self):
+		self.fetch_date()
 
 	def fetch_date(self):
 		#Crude implementation

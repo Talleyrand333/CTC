@@ -77,10 +77,10 @@
    "reqd": 1
   },
   {
+   "default": "now",
    "fieldname": "test_time",
    "fieldtype": "Datetime",
-   "label": "Test Date",
-   "options": "now"
+   "label": "Test Date"
   },
   {
    "fieldname": "amended_from",
@@ -152,7 +152,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-05-31 20:40:56.912727",
+ "modified": "2021-06-02 10:57:49.038611",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Lab Test",

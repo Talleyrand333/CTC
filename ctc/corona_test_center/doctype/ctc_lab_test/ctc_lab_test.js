@@ -13,9 +13,7 @@ frappe.ui.form.on('CTC Lab Test', {
 						content:__(`
 						Good day,  ${frm.doc.full_name} 
 						As the test result from the test (${frm.doc.name}) shows You have tested ${frm.doc.report_status}.
-						
 						Stay healthy!
-						
 						Your CoronaTestPoint team
 						Elmshorner Str. 25
 						25421 Pinneberg`),
