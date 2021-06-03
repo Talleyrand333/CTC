@@ -4,19 +4,15 @@
 frappe.views.calendar["CTC Lab Test"] = {
 	field_map: {
 		"start": "appointment",
-		"end": "appointment",
+		"end": "appointment_end",
 		"id": "name",
+		"allDay": "all_day",
 		"title": "full_name",
-		"allDay": "allDay",
 	},
-	gantt: true,
-	// filters: [
-	// 	{
-	// 		"fieldtype": "Link",
-	// 		"fieldname": "project",
-	// 		"options": "Project",
-	// 		"label": __("Project")
-	// 	}
-	// ],
-	get_events_method: "frappe.desk.calendar.get_events"
+	// style_map: {
+	// 	"Public": "success",
+	// 	"Private": "info"
+	// },
+	// get_events_method: "frappe.desk.calendar.get_events"
+	get_events_method: "ctc.utils.events.get_events"
 }

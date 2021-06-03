@@ -18,12 +18,12 @@
   "report_preference",
   "test_time",
   "amended_from",
-  "status",
   "date_of_birth",
   "phone_number",
   "report_status",
   "town",
-  "intro_email_sent"
+  "intro_email_sent",
+  "appointment_end"
  ],
  "fields": [
   {
@@ -44,13 +44,6 @@
    "fieldname": "appointment",
    "fieldtype": "Datetime",
    "label": "Appointment"
-  },
-  {
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "label": "Status",
-   "options": "Draft\nSubmitted\nCanceled",
-   "read_only": 1
   },
   {
    "fieldname": "report_status",
@@ -147,12 +140,19 @@
    "fieldtype": "Data",
    "label": "Street",
    "read_only": 1
+  },
+  {
+   "fieldname": "appointment_end",
+   "fieldtype": "Datetime",
+   "hidden": 1,
+   "label": "Appointment End",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-06-02 10:57:49.038611",
+ "modified": "2021-06-03 02:13:12.460503",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Lab Test",

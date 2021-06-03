@@ -9,14 +9,18 @@ import pytz
 
 class CTCLabTest(Document):
 
-	def on_submit(self):
-		self.status = "Submitted"
-	
-	def on_cancel(self):
-		self.status = "Canceled"
-	
 	def before_submit(self):
 		self.fetch_date()
+		self.set_appointment_end()
+	
+
+	def set_appointment_end(self):
+		from frappe.utils import get_datetime
+		if self.appointment:
+			appointment_end = get_datetime(self.appointment) + datetime.timedelta(minutes=1)
+			self.appointment_end=appointment_end
+
+	
 
 	def fetch_date(self):
 		#Crude implementation
@@ -45,3 +49,6 @@ class CTCLabTest(Document):
 
 
 
+	@frappe.whitelist()
+	def get_events(start,end,filters=None):
+		return frappe.db.sql("""select name ,appointment as start, appointment_end as end from `tabCTC Lab Test` where docstatus =1""",as_dict=1)
