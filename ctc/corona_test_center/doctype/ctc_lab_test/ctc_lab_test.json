@@ -7,21 +7,23 @@
  "engine": "InnoDB",
  "field_order": [
   "patient",
-  "full_name",
   "test_name",
   "appointment",
   "email",
-  "location",
-  "zipcode",
-  "street",
   "column_break_5",
+  "location",
+  "report_status",
   "report_preference",
   "test_time",
-  "amended_from",
-  "date_of_birth",
+  "patient_information_section",
+  "full_name",
   "phone_number",
-  "report_status",
+  "date_of_birth",
+  "column_break_15",
   "town",
+  "zipcode",
+  "street",
+  "amended_from",
   "intro_email_sent",
   "appointment_end"
  ],
@@ -147,12 +149,21 @@
    "hidden": 1,
    "label": "Appointment End",
    "read_only": 1
+  },
+  {
+   "fieldname": "patient_information_section",
+   "fieldtype": "Section Break",
+   "label": "Patient Information"
+  },
+  {
+   "fieldname": "column_break_15",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-06-03 02:13:12.460503",
+ "modified": "2021-06-04 09:15:09.849927",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Lab Test",

@@ -17,7 +17,7 @@ class CTCLabTest(Document):
 	def set_appointment_end(self):
 		from frappe.utils import get_datetime
 		if self.appointment:
-			appointment_end = get_datetime(self.appointment) + datetime.timedelta(minutes=1)
+			appointment_end = get_datetime(self.appointment) + datetime.timedelta(minutes=5)
 			self.appointment_end=appointment_end
 
 	
