@@ -9,7 +9,6 @@
   "patient",
   "test_name",
   "appointment",
-  "email",
   "column_break_5",
   "location",
   "report_status",
@@ -17,12 +16,14 @@
   "test_time",
   "patient_information_section",
   "full_name",
-  "phone_number",
-  "date_of_birth",
-  "column_break_15",
-  "town",
-  "zipcode",
   "street",
+  "zipcode",
+  "phone_number",
+  "column_break_15",
+  "date_of_birth",
+  "street_number",
+  "town",
+  "email",
   "amended_from",
   "intro_email_sent",
   "appointment_end"
@@ -157,12 +158,18 @@
   {
    "fieldname": "column_break_15",
    "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "patient.street_number",
+   "fieldname": "street_number",
+   "fieldtype": "Data",
+   "label": "Street Number"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-06-04 09:35:58.761179",
+ "modified": "2021-06-04 13:47:45.890488",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Lab Test",
