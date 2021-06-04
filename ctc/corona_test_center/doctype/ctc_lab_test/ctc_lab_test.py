@@ -8,10 +8,16 @@ from frappe.utils.background_jobs import enqueue
 import pytz
 
 class CTCLabTest(Document):
+	
+
+	def on_submit(self):
+		self.send_email_to_patient()
+
 
 	def before_submit(self):
 		self.fetch_date()
 		self.set_appointment_end()
+		
 	
 
 	def set_appointment_end(self):
@@ -30,17 +36,41 @@ class CTCLabTest(Document):
 						
 
 	def send_email_to_patient(self):
-		email_args = {
-				"recipients": [self.email],
-				"message": _(f"You have been registered for your Lab test. the ID is {self.name}, Please come for the test with this ID "),
-				"subject": _('Registration Complete'),
-				"attachments": [frappe.attach_print("CTC Lab Test", self.name)],
-				"reference_doctype": self.doctype,
-				"reference_name": self.name
-		}
-		enqueue(method=frappe.sendmail, queue='short', timeout=300, **email_args)
+		if self.report_preference=="Email" and self.report_status!='Faulty':
+			negative_msg = f"""Guten Tag, es gibt gute Nachrichten!
+					Wie das Testergebnis vom {{ frappe.utils.formatdate(doc.get_formatted('test_time'), "dd.MM.yyyy:HH:mm") }} zeigt, wurde bei Ihnen das Coronavirus nicht nachgewiesen.
+					Bleiben Sie gesund! 
+					Als Anlage erhalten Sie die Bescheinigung zu Ihrem Testergebnis.
 
-		
+					Ihr CoronaTestPoint Team
+					Elmshorner Str.25
+					25421 Pinneberg"""
+
+			postive_msg = f"""Guten Tag, es gibt gute Nachrichten!
+								Wie das Testergebnis vom {{ frappe.utils.formatdate(doc.get_formatted('test_time'), "dd.MM.yyyy:HH:mm") }} zeigt, wurde bei Ihnen das Coronavirus nicht nachgewiesen.
+								Bleiben Sie gesund! 
+								Als Anlage erhalten Sie die Bescheinigung zu Ihrem Testergebnis.
+
+								Ihr CoronaTestPoint Team
+								Elmshorner Str.25
+								25421 Pinneberg"""
+			
+			message = postive_msg if self.report_status =="Positive" else negative_msg
+			email_args = {
+					"recipients": [self.email],
+					"message": _(message),
+					"subject": _('Registration Complete'),
+					"attachments": [frappe.attach_print("CTC Lab Test", self.name)],
+					"reference_doctype": self.doctype,
+					"reference_name": self.name
+			}
+			frappe.sendmail(recipients=email_args['recipients'],
+			message=email_args['message'],
+			subject=email_args['subject'],
+			reference_doctype=self.doctype,
+			reference_name=self.name)
+
+			
 		
 
 	@frappe.whitelist()		

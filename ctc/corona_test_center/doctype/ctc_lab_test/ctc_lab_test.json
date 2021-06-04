@@ -152,8 +152,7 @@
   },
   {
    "fieldname": "patient_information_section",
-   "fieldtype": "Section Break",
-   "label": "Patient Information"
+   "fieldtype": "Section Break"
   },
   {
    "fieldname": "column_break_15",
@@ -163,7 +162,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-06-04 09:15:09.849927",
+ "modified": "2021-06-04 09:35:58.761179",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Lab Test",
