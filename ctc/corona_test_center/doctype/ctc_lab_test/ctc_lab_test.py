@@ -3,6 +3,7 @@
 import datetime,json
 import frappe
 from frappe import _
+from frappe.utils import get_datetime
 from frappe.model.document import Document
 from six import string_types
 import pytz
@@ -11,7 +12,7 @@ class CTCLabTest(Document):
 
 	def validate(self):
 		if self._action=='submit':
-			self.status ="Tested"
+			self.status ="Submitted"
 		
 	
 	def on_cancel(self):
@@ -50,6 +51,9 @@ def send_email_to_patient(doc):
 		positive = frappe.get_doc("Email Template",template.positive_email_template)
 		negative = frappe.get_doc("Email Template",template.negative_email_template)
 		data = vars(doc)
+		date_ = get_datetime(doc.test_time)
+		formated_date = datetime.datetime.strftime(date_,"%d.%m.%Y")
+		data['formated_date']=formated_date
 		message = positive if doc.report_status =="Positive" else negative
 		email_args = {
 				"recipients": [doc.email],
