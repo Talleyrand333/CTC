@@ -4,7 +4,6 @@ import datetime
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils.background_jobs import enqueue
 import pytz
 
 class CTCLabTest(Document):
@@ -12,6 +11,10 @@ class CTCLabTest(Document):
 
 	def on_submit(self):
 		self.send_email_to_patient()
+		
+	
+	def on_cancel(self):
+		self.status = "Cancelled"
 
 
 	def before_submit(self):
@@ -37,29 +40,17 @@ class CTCLabTest(Document):
 
 	def send_email_to_patient(self):
 		if self.report_preference=="Email" and self.report_status!='Faulty':
-			negative_msg = f"""Guten Tag, es gibt gute Nachrichten!
-					Wie das Testergebnis vom {{ frappe.utils.formatdate(doc.get_formatted('test_time'), "dd.MM.yyyy:HH:mm") }} zeigt, wurde bei Ihnen das Coronavirus nicht nachgewiesen.
-					Bleiben Sie gesund! 
-					Als Anlage erhalten Sie die Bescheinigung zu Ihrem Testergebnis.
-
-					Ihr CoronaTestPoint Team
-					Elmshorner Str.25
-					25421 Pinneberg"""
-
-			postive_msg = f"""Guten Tag, es gibt gute Nachrichten!
-								Wie das Testergebnis vom {{ frappe.utils.formatdate(doc.get_formatted('test_time'), "dd.MM.yyyy:HH:mm") }} zeigt, wurde bei Ihnen das Coronavirus nicht nachgewiesen.
-								Bleiben Sie gesund! 
-								Als Anlage erhalten Sie die Bescheinigung zu Ihrem Testergebnis.
-
-								Ihr CoronaTestPoint Team
-								Elmshorner Str.25
-								25421 Pinneberg"""
-			
-			message = postive_msg if self.report_status =="Positive" else negative_msg
+			template = frappe.get_doc("CTC Settings")
+			if not(template.get('postive_email_template') or template.get('negative_email_template')):
+				frappe.throw(_("Please ensure that all template fields in CTC Settings page are field"))
+			positive = frappe.get_doc("Email Template",template.positive_email_template).response
+			negative = frappe.get_doc("Email Template",template.negative_email_template).response
+			data = vars(self)
+			message = positive if self.report_status =="Positive" else negative
 			email_args = {
 					"recipients": [self.email],
-					"message": _(message),
-					"subject": _('Registration Complete'),
+					"message": frappe.render_template(message,data),
+					"subject": _('Test Results'),
 					"attachments": [frappe.attach_print("CTC Lab Test", self.name)],
 					"reference_doctype": self.doctype,
 					"reference_name": self.name
@@ -67,6 +58,7 @@ class CTCLabTest(Document):
 			frappe.sendmail(recipients=email_args['recipients'],
 			message=email_args['message'],
 			subject=email_args['subject'],
+			attachment=email_args['attachments'],
 			reference_doctype=self.doctype,
 			reference_name=self.name)
 
