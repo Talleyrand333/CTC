@@ -47,14 +47,14 @@ def send_email_to_patient(doc):
 		template = frappe.get_doc("CTC Settings")
 		if not(template.get('postive_email_template') or template.get('negative_email_template')):
 			frappe.throw(_("Please ensure that all template fields in CTC Settings page are field"))
-		positive = frappe.get_doc("Email Template",template.positive_email_template).response
-		negative = frappe.get_doc("Email Template",template.negative_email_template).response
+		positive = frappe.get_doc("Email Template",template.positive_email_template)
+		negative = frappe.get_doc("Email Template",template.negative_email_template)
 		data = vars(doc)
 		message = positive if doc.report_status =="Positive" else negative
 		email_args = {
 				"recipients": [doc.email],
-				"message": frappe.render_template(message,data),
-				"subject": _('Test Results'),
+				"message": frappe.render_template(message.response,data),
+				"subject": message.subject,
 				"attachments": [frappe.attach_print("CTC Lab Test", doc.name)],
 				"reference_doctype": doc.doctype,
 				"reference_name": doc.name
