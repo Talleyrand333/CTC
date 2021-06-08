@@ -4,8 +4,7 @@ frappe.listview_settings['CTC Lab Test'] = {
 		var status_color = {
 			"Draft": "grey",
 			"Tested": "yellow",
-            "Submitted":"red",
-            'Cancelled':'blue'
+            'Cancelled':'blue',
            
 		};
 		return [__(doc.status), status_color[doc.status], "status,=,"+doc.status];

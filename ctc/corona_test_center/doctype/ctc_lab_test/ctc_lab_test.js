@@ -7,22 +7,10 @@ frappe.ui.form.on('CTC Lab Test', {
 		if ((!frm.is_new()) && (frm.doc.docstatus==1) ) {
 			frm.add_custom_button(__("Send Email"),()=>{
 				frappe.call({
-					method: 'frappe.core.doctype.communication.email.make',
-					args: {
-						recipients: frm.doc.email,
-						content:__(`
-						Good day,  ${frm.doc.full_name} 
-						As the test result from the test (${frm.doc.name}) shows You have tested ${frm.doc.report_status}.
-						Stay healthy!
-						Your CoronaTestPoint team
-						Elmshorner Str. 25
-						25421 Pinneberg`),
-						subject: frm.doc.name,
-						doctype: "CTC Lab Test",          //name of doctype (is single doctype)
-						name: frm.doc.name,
-						send_email: 1,
-						communication_medium: "Email",
-						},async: true,
+					method: 'ctc.corona_test_center.doctype.ctc_lab_test.ctc_lab_test.send_email_to_patient',
+					args:{
+						'doc':cur_frm.doc,
+					},
 					callback: function() {
 						frappe.msgprint({
 							title: __('Email'),
