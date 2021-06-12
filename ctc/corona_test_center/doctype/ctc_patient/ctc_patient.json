@@ -124,13 +124,12 @@
   {
    "fieldname": "street_number",
    "fieldtype": "Data",
-   "label": "Street Number",
-   "reqd": 1
+   "label": "Street Number"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-06-02 10:25:45.720625",
+ "modified": "2021-06-12 23:38:10.327962",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Patient",
