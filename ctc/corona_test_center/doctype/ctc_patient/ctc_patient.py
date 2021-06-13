@@ -47,6 +47,7 @@ class CTCPatient(Document):
 				'phone_number':self.phone_number,
 				'town':self.towncity,
 				'zipcode':self.zip_code,
+				'street_number':self.street_number,
 				'street':self.street
 			}
 			doc = frappe.get_doc(patient_doc)
