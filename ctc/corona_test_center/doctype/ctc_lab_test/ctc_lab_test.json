@@ -115,6 +115,7 @@
    "fieldname": "phone_number",
    "fieldtype": "Data",
    "label": "Phone Number",
+   "options": "Phone",
    "read_only": 1
   },
   {
@@ -176,7 +177,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-06-08 09:46:11.303168",
+ "modified": "2021-06-17 14:31:34.176131",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Lab Test",
