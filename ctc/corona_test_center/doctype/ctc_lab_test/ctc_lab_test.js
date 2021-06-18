@@ -22,24 +22,23 @@ frappe.ui.form.on('CTC Lab Test', {
 				});
 			})
 			frm.add_custom_button(__("Send SMS"),()=>{
-				var number = frm.doc.phone_number;
-				var message = 'Your Test Result ID: ' + frm.doc.name + ' Test Name: ' + frm.doc.test_name + ' and Result :' + frm.doc.report_status + '';
+				// var number = frm.doc.phone_number;
+				// var message = 'Your Test Result ID: ' + frm.doc.name + ' Test Name: ' + frm.doc.test_name + ' and Result :' + frm.doc.report_status + '';
 			
-				if (!number || !message) {
-					frappe.throw(__('Did not send SMS, missing patient mobile number or message content.'));
-				}
+				// if (!number || !message) {
+				// 	frappe.throw(__('Did not send SMS, missing patient mobile number or message content.'));
+				// }
 				frappe.call({
-					method: 'frappe.core.doctype.sms_settings.sms_settings.send_sms',
+					method: 'ctc.corona_test_center.doctype.ctc_lab_test.ctc_lab_test.send_sms_to_patient',
 					args: {
-						receiver_list: [number],
-						msg: message
+						'doc':cur_frm.doc
 					},
 					callback: function (r) {
-						if (r.exc) {
-							frappe.msgprint(r.exc);
-						} else {
-							frm.reload_doc();
-						}
+						frappe.msgprint({
+							title: __('SMS'),
+							indicator: 'green',
+							message: __('SMS Sent successfully')
+						});
 					}
 				});
 			})
