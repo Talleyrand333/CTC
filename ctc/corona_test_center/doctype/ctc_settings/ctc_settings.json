@@ -7,7 +7,11 @@
  "field_order": [
   "positive_email_template",
   "column_break_2",
-  "negative_email_template"
+  "negative_email_template",
+  "section_break_4",
+  "positive_sms",
+  "column_break_5",
+  "negative_sms"
  ],
  "fields": [
   {
@@ -25,12 +29,30 @@
    "fieldtype": "Link",
    "label": "Negative Email Template",
    "options": "Email Template"
+  },
+  {
+   "fieldname": "positive_sms",
+   "fieldtype": "Small Text",
+   "label": "Positive SMS"
+  },
+  {
+   "fieldname": "column_break_5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "negative_sms",
+   "fieldtype": "Small Text",
+   "label": "Negative SMS"
+  },
+  {
+   "fieldname": "section_break_4",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2021-06-07 21:55:09.265871",
+ "modified": "2021-06-18 15:38:09.676194",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Settings",

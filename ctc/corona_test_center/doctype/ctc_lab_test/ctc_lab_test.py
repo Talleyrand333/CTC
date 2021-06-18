@@ -47,18 +47,18 @@ def send_sms_to_patient(doc):
     if isinstance(doc,string_types):
         doc = json.loads(doc)
         doc= frappe.get_doc(doc)
-    if doc.report_preference=="Email" and doc.report_status!='Faulty':
+    if doc.report_preference=="SMS" and doc.report_status!='Faulty':
         template = frappe.get_doc("CTC Settings")
-        if not(template.get('postive_email_template') or template.get('negative_email_template')):
+        if not(template.get('positive_sms') or template.get('negative_sms')):
             frappe.throw(_("Please ensure that all template fields in CTC Settings page are filled"))
-        positive = frappe.get_doc("Email Template",template.positive_email_template)
-        negative = frappe.get_doc("Email Template",template.negative_email_template)
+        positive = template.positive_sms
+        negative = template.negative_sms
         data = vars(doc)
         date_ = get_datetime(doc.test_time)
         formated_date = datetime.datetime.strftime(date_,"%d.%m.%Y")
         data['formated_date']=formated_date
         message = positive if doc.report_status =="Positive" else negative
-        message=frappe.render_template(message.response,data)
+        message=frappe.render_template(message,data)
         send_sms(receiver_list = [doc.phone_number],msg=message)
         return True
         
