@@ -10,9 +10,10 @@ import pytz
 
 class CTCLabTest(Document):
 
-    # def validate(self):
-    #     if self._action=='submit':
-    #         self.status ="Submitted"
+    def validate(self):
+        if self._action=='submit':
+            send_email_to_patient(self)
+            send_sms_to_patient(self)
         
     
     def on_cancel(self):
