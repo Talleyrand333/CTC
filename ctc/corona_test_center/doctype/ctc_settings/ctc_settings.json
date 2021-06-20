@@ -6,8 +6,10 @@
  "engine": "InnoDB",
  "field_order": [
   "positive_email_template",
+  "positive_english_template",
   "column_break_2",
   "negative_email_template",
+  "negative_english_template",
   "section_break_4",
   "positive_sms",
   "column_break_5",
@@ -47,12 +49,24 @@
   {
    "fieldname": "section_break_4",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "positive_english_template",
+   "fieldtype": "Link",
+   "label": "Positive English Template",
+   "options": "Email Template"
+  },
+  {
+   "fieldname": "negative_english_template",
+   "fieldtype": "Link",
+   "label": "Negative English Template",
+   "options": "Email Template"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2021-06-18 15:38:09.676194",
+ "modified": "2021-06-20 15:22:57.364001",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Settings",

@@ -75,8 +75,8 @@ def send_email_to_patient(doc):
         template = frappe.get_doc("CTC Settings")
         if not(template.get('postive_email_template') or template.get('negative_email_template')):
             frappe.throw(_("Please ensure that all template fields in CTC Settings page are filled"))
-        positive = frappe.get_doc("Email Template",template.positive_email_template)
-        negative = frappe.get_doc("Email Template",template.negative_email_template)
+        positive = frappe.get_doc("Email Template",template.positive_email_template) if not doc.send_notification_in_english else frappe.get_doc("Email Template",template.positive_english_template)
+        negative = frappe.get_doc("Email Template",template.negative_email_template) if not doc.send_notification_in_english else frappe.get_doc("Email Template",template.negative_english_template) 
         data = vars(doc)
         date_ = get_datetime(doc.test_time)
         formated_date = datetime.datetime.strftime(date_,"%d.%m.%Y")
