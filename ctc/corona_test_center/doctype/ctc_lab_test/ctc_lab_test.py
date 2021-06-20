@@ -52,8 +52,8 @@ def send_sms_to_patient(doc):
         template = frappe.get_doc("CTC Settings")
         if not(template.get('positive_sms') or template.get('negative_sms')):
             frappe.throw(_("Please ensure that all template fields in CTC Settings page are filled"))
-        positive = template.positive_sms
-        negative = template.negative_sms
+        positive = template.positive_sms if not doc.send_notification_in_english else template.positive_english_sms
+        negative = template.negative_sms if not doc.send_notification_in_english else template.negative_english_sms
         data = vars(doc)
         date_ = get_datetime(doc.test_time)
         formated_date = datetime.datetime.strftime(date_,"%d.%m.%Y")

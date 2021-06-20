@@ -12,8 +12,10 @@
   "negative_english_template",
   "section_break_4",
   "positive_sms",
+  "positive_english_sms",
   "column_break_5",
-  "negative_sms"
+  "negative_sms",
+  "negative_english_sms"
  ],
  "fields": [
   {
@@ -61,12 +63,22 @@
    "fieldtype": "Link",
    "label": "Negative English Template",
    "options": "Email Template"
+  },
+  {
+   "fieldname": "positive_english_sms",
+   "fieldtype": "Small Text",
+   "label": "Positive English SMS"
+  },
+  {
+   "fieldname": "negative_english_sms",
+   "fieldtype": "Small Text",
+   "label": "Negative English SMS"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2021-06-20 15:22:57.364001",
+ "modified": "2021-06-20 15:49:58.355446",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Settings",
