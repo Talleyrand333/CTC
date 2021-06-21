@@ -90,6 +90,7 @@ def send_email_to_patient(doc):
         formated_date = datetime.datetime.strftime(date_,"%d.%m.%Y")
         data['formated_date']=formated_date
         message = positive if doc.report_status =="Positive" else negative
+        
         email_args = {
                 "recipients": [doc.email],
                 "message": frappe.render_template(message.response,data),
@@ -99,6 +100,7 @@ def send_email_to_patient(doc):
                 "reference_name": doc.name
                 
         }
+        
         frappe.sendmail(recipients=email_args['recipients'],
         message=email_args['message'],
         subject=email_args['subject'],
@@ -107,13 +109,15 @@ def send_email_to_patient(doc):
         reference_name=doc.name)
         if negative2 and positive2:
             message2=  positive2 if doc.report_status =="Positive" else negative2
-            email_args['attachments2'] = [frappe.attach_print('CTC Lab Test',doc.name,print_format=template.print_format_for_english_notification)]
-            email_args['eng_msg'] = frappe.render_template(message2.response,data),
+            email_args['attachments2'] = [frappe.attach_print('CTC Lab Test',doc.name,file_name=doc.name,print_format=template.print_format_for_english_notification)]
+            email_args['eng_msg'] = frappe.render_template(message2.response,data)
             email_args['eng_sub'] = message2.subject
-            frappe.sendmail(recipients=email_args['recipients'],
-                message=email_args['eng_msg'],
-                subject=email_args['eng_sub'],
-                attachments=email_args['attachments2'],
-                reference_doctype=doc.doctype,
-                reference_name=doc.name)
+            
+            frappe.sendmail(
+            recipients=email_args['recipients'],
+            message=email_args['eng_msg'],
+            subject=email_args['eng_sub'],
+            attachments=email_args['attachments2'],
+            reference_doctype=doc.doctype,
+            reference_name=doc.name)
         return True
