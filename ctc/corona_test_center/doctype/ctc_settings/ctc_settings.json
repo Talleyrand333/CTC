@@ -15,7 +15,8 @@
   "positive_english_sms",
   "column_break_5",
   "negative_sms",
-  "negative_english_sms"
+  "negative_english_sms",
+  "print_format_for_english_notification"
  ],
  "fields": [
   {
@@ -73,12 +74,18 @@
    "fieldname": "negative_english_sms",
    "fieldtype": "Small Text",
    "label": "Negative English SMS"
+  },
+  {
+   "fieldname": "print_format_for_english_notification",
+   "fieldtype": "Link",
+   "label": "Print Format for English Notification",
+   "options": "Print Format"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2021-06-20 15:49:58.355446",
+ "modified": "2021-06-21 02:20:01.358444",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Settings",
