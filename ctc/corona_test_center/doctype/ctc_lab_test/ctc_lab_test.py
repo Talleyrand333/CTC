@@ -21,7 +21,7 @@ class CTCLabTest(Document):
 
 
     def before_submit(self):
-        self.fetch_date()
+        # self.fetch_date()
         self.set_appointment_end()
         
     
