@@ -40,7 +40,21 @@ class CTCLabTest(Document):
         now=datetime.datetime.now(tz)
         self.test_time = datetime.datetime(now.year,now.month,now.day,now.hour,now.minute,now.second)
 
-
+@frappe.whitelist()
+def fetch_patient_status(doc):
+    import datetime
+    if isinstance(doc,string_types):
+        doc = json.loads(doc)
+        doc= frappe.get_doc(doc)
+    active = False
+    existing_subs = frappe.get_all("Patient Subscription",{'patient':doc.patient},['start_date','end_date'])
+    today = datetime.datetime.now()
+    if existing_subs:
+        for each in existing_subs:
+            if get_datetime(each['start_date']) <= today and get_datetime(each['end_date']) > today:
+                active = True
+    return active
+    
 
 @frappe.whitelist()
 def send_sms_to_patient(doc):

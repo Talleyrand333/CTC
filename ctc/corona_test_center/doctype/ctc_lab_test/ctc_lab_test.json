@@ -22,6 +22,7 @@
   "zipcode",
   "phone_number",
   "column_break_15",
+  "subscription",
   "date_of_birth",
   "street_number",
   "town",
@@ -181,12 +182,19 @@
    "fieldname": "send_notification_in_english",
    "fieldtype": "Check",
    "label": "Send Notification in English"
+  },
+  {
+   "fieldname": "subscription",
+   "fieldtype": "Select",
+   "label": "Subscription Status",
+   "options": "\nActive\nInactive",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-06-21 04:06:47.260348",
+ "modified": "2021-10-10 22:06:07.944022",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Lab Test",

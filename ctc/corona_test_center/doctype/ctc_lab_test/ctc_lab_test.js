@@ -2,7 +2,18 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('CTC Lab Test', {
-	
+	patient: function(frm){
+		frappe.call({
+			method:'ctc.corona_test_center.doctype.ctc_lab_test.ctc_lab_test.fetch_patient_status',
+			args: {
+				'doc':frm.doc
+			},
+			callback:r=>{
+				r.message == true ? frm.doc.subscription = "Active":frm.doc.subscription = "Inactive"
+				frm.refresh_field('subscription')
+			}
+		})
+	},
 	refresh: function(frm) {
 		if ((!frm.is_new()) && (frm.doc.docstatus==1) ) {
 			frm.add_custom_button(__("Send Email"),()=>{
