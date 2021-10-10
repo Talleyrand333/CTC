@@ -6,7 +6,7 @@ import frappe
 from frappe.model.document import Document
 from six import string_types
 import json,datetime
-
+from frappe.utils import get_datetime
 class CTCPatient(Document):
 
 	def validate(self):
@@ -14,6 +14,18 @@ class CTCPatient(Document):
 		self.validate_zip_code()
 		self.validate_country_code()
 		self.create_labtest()
+		self.set_subscription_status()
+	
+	def set_subscription_status(self):
+		import datetime
+		active = False
+		existing_subs = frappe.get_all("Patient Subscription",{'patient':self.name},['start_date','end_date'])
+		today = datetime.datetime.now()
+		if existing_subs:
+			for each in existing_subs:
+				if get_datetime(each['start_date']) <= today and get_datetime(each['end_date']) > today:
+					active = True
+		self.active_subscription = "Active" if active else "Inactive"
 	
 
 
@@ -106,4 +118,4 @@ def create_patient_appointment(data):
 	lab_doc= frappe.get_doc(lab_dict)
 	lab_doc.save()
 	return(lab_doc.name)
-		    
+			

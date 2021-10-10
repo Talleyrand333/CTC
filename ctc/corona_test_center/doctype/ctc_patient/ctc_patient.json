@@ -21,7 +21,8 @@
   "towncity",
   "create_lab_test",
   "appointment",
-  "test_name"
+  "test_name",
+  "active_subscription"
  ],
  "fields": [
   {
@@ -126,11 +127,18 @@
    "fieldname": "street_number",
    "fieldtype": "Data",
    "label": "Street Number"
+  },
+  {
+   "fieldname": "active_subscription",
+   "fieldtype": "Select",
+   "label": "Active Subscription",
+   "options": "Active\nInactive",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-06-17 14:53:03.959316",
+ "modified": "2021-10-11 00:08:06.835432",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Patient",

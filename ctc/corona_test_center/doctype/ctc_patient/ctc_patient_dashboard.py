@@ -8,7 +8,11 @@ def get_data():
 		'transactions': [
 			{
 				'label': _('Lab Tests'),
- 				'items': ['CTC Lab Test']
+ 				'items': ['CTC Lab Test'],
+			},
+			{
+				'label': _('Subscriptions'),
+ 				'items': ['Patient Subscription'],
 			},
 		]
 	}
