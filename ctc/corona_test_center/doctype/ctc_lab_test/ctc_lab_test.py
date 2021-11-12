@@ -10,6 +10,30 @@ import pytz
 
 class CTCLabTest(Document):
 
+
+    def autoname(self):
+        #Generate a random 7 character string that starts with the letter T
+        prop_name = "T"+self.generate_code()
+        while frappe.db.exists(self.doctype,prop_name):
+            prop_name = "T"+self.generate_code()
+        self.name = prop_name
+        return
+        
+
+
+    def generate_code(self,l=None):
+        import string,random
+        length_= 6 if not l else int(l)
+        
+        numbers = [str(i) for i in range(10)]
+        alpha = string.ascii_letters
+        combined = "".join(numbers)+alpha+"/-_"
+        txn_ref = ""
+        for i in range(0,length_+1):
+            txn_ref+=random.choice(combined)
+        txn_=txn_ref
+        return(txn_)
+
     def validate(self):
         if self._action=='submit':
             send_email_to_patient(self)
