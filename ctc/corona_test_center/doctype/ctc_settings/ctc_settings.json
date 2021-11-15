@@ -16,7 +16,10 @@
   "column_break_5",
   "negative_sms",
   "negative_english_sms",
-  "print_format_for_english_notification"
+  "print_format_for_english_notification",
+  "cwa_certificate",
+  "cwa_certificate_key",
+  "qr_code_location"
  ],
  "fields": [
   {
@@ -80,12 +83,27 @@
    "fieldtype": "Link",
    "label": "Print Format for English Notification",
    "options": "Print Format"
+  },
+  {
+   "fieldname": "cwa_certificate",
+   "fieldtype": "Attach",
+   "label": "CWA Certificate"
+  },
+  {
+   "fieldname": "cwa_certificate_key",
+   "fieldtype": "Attach",
+   "label": "CWA Certificate Key"
+  },
+  {
+   "fieldname": "qr_code_location",
+   "fieldtype": "Data",
+   "label": "QR Code Location"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2021-06-21 02:20:01.358444",
+ "modified": "2021-11-14 22:38:03.537835",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Settings",

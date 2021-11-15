@@ -10,6 +10,60 @@ import pytz
 
 class CTCLabTest(Document):
 
+    def fetch_api_arguments(self):
+        #Fetch all the required information for creating the API
+        api_arguments = {}
+        api_arguments['fn'] = frappe.get_value("CTC Patient",self.patient,'first_name')
+        api_arguments['ln'] = frappe.get_value("CTC Patient",self.patient,'last_name')
+        api_arguments['dob']  = frappe.get_value("CTC Patient",self.patient,'date_of_birth').strftime('%Y-%m-%d')
+        api_arguments['timestamp'] = str(self.test_time.timestamp())
+        api_arguments['test_id'] = self.name
+        api_arguments['salt'] = self.generate_code(l=32,is_hex=1)
+        api_arguments['hash'] = self.generate_hash(api_arguments)
+        return api_arguments
+    
+    def generate_base64(self,api_args):
+        #Generate a base63 encoded character and a QRCode Image for the rest api
+        import base64,json,qrcode
+        dumped_json  = json.dumps(api_args)
+        encoded_json = base64.b64encode(dumped_json.encode('utf-8'))
+        req_url = 'https://s.coronawarn.app?v=1#'+str(encoded_json.decode('UTF-8'))
+        img = qrcode.make(req_url)
+        prop_name = self.name+datetime.date.today().strftime("%Y-%m-%s")+".jpg"
+        img.save(prop_name)
+        _file = frappe.get_doc({
+                "doctype": "File",
+                "file_name":prop_name,
+                "attached_to_doctype": self.doctype,
+                "attached_to_name": self.name,
+                "content":prop_name,
+                # "folder": "Home/Attachments"
+            })
+        _file.flags.ignore_duplicate_entry_error=1
+        _file.save(ignore_permissions=True)
+        self.qr_code = img
+        self.save()
+        frappe.db.commit()
+
+
+    def generate_hash(self,api_args):
+        import hashlib
+        #Generate a Hash256 chracter from a dict of # separated values
+        final_stirng = ""
+        final_stirng+=api_args['dob']+"#"
+        final_stirng+=api_args['fn']+'#'
+        final_stirng+=api_args['ln']+"#"
+        final_stirng+=api_args['timestamp']+"#"
+        final_stirng+=api_args['test_id']+"#"
+        final_stirng+=api_args['salt']
+        print(final_stirng)
+        encoded_fs = final_stirng.encode()
+        hash_value = hashlib.sha256(encoded_fs).hexdigest().lower()
+        return hash_value
+
+
+
+        
 
     def autoname(self):
         #Generate a random 7 character string that starts with the letter T
@@ -21,13 +75,14 @@ class CTCLabTest(Document):
         
 
 
-    def generate_code(self,l=None):
+    def generate_code(self,l=None,is_hex=True):
+        #Generate a string of random characters of the required length and format, it has been defaulted to 6 characters in base 10
         import string,random
         length_= 6 if not l else int(l)
         
         numbers = [str(i) for i in range(10)]
-        alpha = string.ascii_letters
-        combined = "".join(numbers)+alpha+"/-_"
+        alpha = string.ascii_letters if not is_hex else 'ABCDEF'
+        combined = "".join(numbers)+alpha
         txn_ref = ""
         for i in range(0,length_+1):
             txn_ref+=random.choice(combined)
