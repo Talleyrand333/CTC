@@ -19,7 +19,8 @@
   "print_format_for_english_notification",
   "cwa_certificate",
   "cwa_certificate_key",
-  "qr_code_location"
+  "qr_code_location",
+  "certificate_passphrase"
  ],
  "fields": [
   {
@@ -97,13 +98,18 @@
   {
    "fieldname": "qr_code_location",
    "fieldtype": "Data",
-   "label": "QR Code Location"
+   "label": "QR Code Save Location"
+  },
+  {
+   "fieldname": "certificate_passphrase",
+   "fieldtype": "Password",
+   "label": "Certificate Passphrase"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2021-11-14 22:38:03.537835",
+ "modified": "2021-11-15 14:55:56.413930",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Settings",

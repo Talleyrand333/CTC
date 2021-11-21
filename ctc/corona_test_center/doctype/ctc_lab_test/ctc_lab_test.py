@@ -16,7 +16,7 @@ class CTCLabTest(Document):
         api_arguments['fn'] = frappe.get_value("CTC Patient",self.patient,'first_name')
         api_arguments['ln'] = frappe.get_value("CTC Patient",self.patient,'last_name')
         api_arguments['dob']  = frappe.get_value("CTC Patient",self.patient,'date_of_birth').strftime('%Y-%m-%d')
-        api_arguments['timestamp'] = str(self.test_time.timestamp())
+        api_arguments['timestamp'] = str(get_datetime(self.test_time).timestamp())
         api_arguments['test_id'] = self.name
         api_arguments['salt'] = self.generate_code(l=32,is_hex=1)
         api_arguments['hash'] = self.generate_hash(api_arguments)
@@ -25,24 +25,28 @@ class CTCLabTest(Document):
     def generate_base64(self,api_args):
         #Generate a base63 encoded character and a QRCode Image for the rest api
         import base64,json,qrcode
+        from io import BytesIO
+        buffered = BytesIO()
         dumped_json  = json.dumps(api_args)
         encoded_json = base64.b64encode(dumped_json.encode('utf-8'))
         req_url = 'https://s.coronawarn.app?v=1#'+str(encoded_json.decode('UTF-8'))
+        print(req_url)
         img = qrcode.make(req_url)
-        prop_name = self.name+datetime.date.today().strftime("%Y-%m-%s")+".jpg"
-        img.save(prop_name)
+        prop_name = self.name+datetime.date.today().strftime("%Y-%m-%s")+".jpeg"
+        save_path = frappe.get_site_path()
+        img.save(save_path+"/"+'private/files/'+prop_name,format="JPEG")
+        print(save_path+prop_name)
         _file = frappe.get_doc({
                 "doctype": "File",
                 "file_name":prop_name,
                 "attached_to_doctype": self.doctype,
                 "attached_to_name": self.name,
-                "content":prop_name,
-                # "folder": "Home/Attachments"
+                'file_url':'/private/files/'+prop_name,
             })
         _file.flags.ignore_duplicate_entry_error=1
         _file.save(ignore_permissions=True)
-        self.qr_code = img
-        self.save()
+        self.qr_code_path = "/"+'private/files/'+prop_name
+        # self.save()
         frappe.db.commit()
 
 
@@ -59,6 +63,7 @@ class CTCLabTest(Document):
         print(final_stirng)
         encoded_fs = final_stirng.encode()
         hash_value = hashlib.sha256(encoded_fs).hexdigest().lower()
+        self.hash_content = hash_value
         return hash_value
 
 
@@ -90,9 +95,12 @@ class CTCLabTest(Document):
         return(txn_)
 
     def validate(self):
+        api_args = self.fetch_api_arguments()
+        self.generate_base64(api_args)
         if self._action=='submit':
             send_email_to_patient(self)
             send_sms_to_patient(self)
+            
         
     
     def on_cancel(self):

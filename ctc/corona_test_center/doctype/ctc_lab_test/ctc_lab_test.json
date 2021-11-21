@@ -23,6 +23,7 @@
   "phone_number",
   "column_break_15",
   "subscription",
+  "hash_content",
   "date_of_birth",
   "street_number",
   "town",
@@ -30,7 +31,8 @@
   "amended_from",
   "intro_email_sent",
   "appointment_end",
-  "qr_code"
+  "qr_code",
+  "qr_code_path"
  ],
  "fields": [
   {
@@ -194,13 +196,27 @@
   {
    "fieldname": "qr_code",
    "fieldtype": "Image",
-   "label": "QR Code"
+   "label": "QR Code",
+   "options": "qr_code_path"
+  },
+  {
+   "fieldname": "hash_content",
+   "fieldtype": "Small Text",
+   "label": "Hash Content",
+   "read_only": 1
+  },
+  {
+   "fieldname": "qr_code_path",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "QR Code Path",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-11-15 02:51:08.039670",
+ "modified": "2021-11-15 16:27:13.250880",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Lab Test",
