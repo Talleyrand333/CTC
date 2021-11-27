@@ -1,0 +1,28 @@
+{
+ "add_total_row": 0,
+ "columns": [],
+ "creation": "2021-05-21 21:56:26.336545",
+ "disable_prepared_report": 1,
+ "disabled": 1,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "json": "{\"filters\":[[\"Lab Test\",\"docstatus\",\"=\",\"1\",false],[\"Lab Test\",\"company\",\"=\",\"CoronaTestPoint\"]],\"fields\":[[\"name\",\"Lab Test\"],[\"patient\",\"Lab Test\"],[\"birth_date\",\"Lab Test\"],[\"street\",\"Lab Test\"],[\"zip_code\",\"Lab Test\"],[\"town\",\"Lab Test\"],[\"test_date\",\"Lab Test\"],[\"uhrzeit\",\"Lab Test\"],[\"email\",\"Lab Test\"],[\"mobile\",\"Lab Test\"]],\"order_by\":\"`tabLab Test`.`modified` desc\",\"add_totals_row\":0,\"page_length\":500,\"column_widths\":{\"name\":120,\"patient\":120,\"birth_date\":120,\"street\":120,\"zip_code\":120,\"town\":120,\"test_date\":120,\"uhrzeit\":120},\"group_by\":null}",
+ "letter_head": "CoronatestPoint",
+ "modified": "2021-06-24 21:32:15.178201",
+ "modified_by": "Administrator",
+ "module": "Corona Test Center",
+ "name": "Lab_Test_Export",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "CTC Lab Test",
+ "report_name": "Lab_Test_Export",
+ "report_type": "Report Builder",
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ]
+}

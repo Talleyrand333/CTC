@@ -1,0 +1,27 @@
+{
+ "attach_print": 0,
+ "channel": "SMS",
+ "condition": "doc.report_status==\"Negative\" and doc.report_preference==\"SMS\"",
+ "creation": "2021-06-11 11:44:57.158951",
+ "days_in_advance": 0,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "CTC Lab Test",
+ "enabled": 0,
+ "event": "Submit",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "Hallo, gute Nachrichten!\nDas Corona Testergebnis vom {{ frappe.utils.formatdate(doc.get_formatted('test_change_date'), \"dd.MM.yyyy\") }} ist negativ. \nBleiben Sie gesund! \n\nCoronaTestPoint\nElmshorner Str.25\nPinneberg",
+ "modified": "2021-06-24 01:44:31.677654",
+ "modified_by": "Administrator",
+ "module": "Corona Test Center",
+ "name": "SMS Negative",
+ "owner": "Administrator",
+ "recipients": [
+  {
+   "receiver_by_document_field": "phone_number"
+  }
+ ],
+ "send_system_notification": 1,
+ "send_to_all_assignees": 0
+}

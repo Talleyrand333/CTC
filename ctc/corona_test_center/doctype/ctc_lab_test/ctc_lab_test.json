@@ -10,9 +10,11 @@
   "test_name",
   "appointment",
   "send_notification_in_english",
+  "send_to_cwa",
   "column_break_5",
   "location",
   "report_status",
+  "lab_test_result",
   "report_preference",
   "test_time",
   "status",
@@ -32,7 +34,8 @@
   "intro_email_sent",
   "appointment_end",
   "qr_code",
-  "qr_code_path"
+  "qr_code_path",
+  "lab_test_hash"
  ],
  "fields": [
   {
@@ -194,6 +197,7 @@
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "qr_code",
    "fieldtype": "Image",
    "label": "QR Code",
@@ -206,17 +210,36 @@
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "qr_code_path",
    "fieldtype": "Data",
-   "hidden": 1,
-   "label": "QR Code Path",
+   "label": "QR Code Path"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "lab_test_hash",
+   "fieldtype": "Data",
+   "label": "Lab Test Hash",
    "read_only": 1
+  },
+  {
+   "description": "5=Pending,6=Negative,7=Postive,8=Invalid",
+   "fieldname": "lab_test_result",
+   "fieldtype": "Select",
+   "label": "Lab Test Result",
+   "options": "\n5\n6\n7\n8"
+  },
+  {
+   "default": "0",
+   "fieldname": "send_to_cwa",
+   "fieldtype": "Check",
+   "label": "Send to CWA"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-11-15 16:27:13.250880",
+ "modified": "2021-11-27 16:06:41.828740",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Lab Test",

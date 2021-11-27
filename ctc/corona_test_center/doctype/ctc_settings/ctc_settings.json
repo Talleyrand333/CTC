@@ -20,7 +20,9 @@
   "cwa_certificate",
   "cwa_certificate_key",
   "qr_code_location",
-  "certificate_passphrase"
+  "certificate_passphrase",
+  "qr_code_url",
+  "ctc_api_url"
  ],
  "fields": [
   {
@@ -104,12 +106,22 @@
    "fieldname": "certificate_passphrase",
    "fieldtype": "Password",
    "label": "Certificate Passphrase"
+  },
+  {
+   "fieldname": "qr_code_url",
+   "fieldtype": "Data",
+   "label": "QR CODE URL"
+  },
+  {
+   "fieldname": "ctc_api_url",
+   "fieldtype": "Data",
+   "label": "CTC API URL"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2021-11-15 14:55:56.413930",
+ "modified": "2021-11-26 13:47:32.699880",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Settings",

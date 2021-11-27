@@ -11,6 +11,7 @@ import pytz
 class CTCLabTest(Document):
 
     def fetch_api_arguments(self):
+        return
         #Fetch all the required information for creating the API
         api_arguments = {}
         api_arguments['fn'] = frappe.get_value("CTC Patient",self.patient,'first_name')
@@ -23,6 +24,7 @@ class CTCLabTest(Document):
         return api_arguments
     
     def generate_base64(self,api_args):
+        return
         #Generate a base63 encoded character and a QRCode Image for the rest api
         import base64,json,qrcode
         from io import BytesIO
@@ -52,6 +54,7 @@ class CTCLabTest(Document):
 
     def generate_hash(self,api_args):
         import hashlib
+        return
         #Generate a Hash256 chracter from a dict of # separated values
         final_stirng = ""
         final_stirng+=api_args['dob']+"#"
@@ -71,6 +74,7 @@ class CTCLabTest(Document):
         
 
     def autoname(self):
+        return
         #Generate a random 7 character string that starts with the letter T
         prop_name = "T"+self.generate_code()
         while frappe.db.exists(self.doctype,prop_name):
@@ -81,6 +85,7 @@ class CTCLabTest(Document):
 
 
     def generate_code(self,l=None,is_hex=True):
+        return
         #Generate a string of random characters of the required length and format, it has been defaulted to 6 characters in base 10
         import string,random
         length_= 6 if not l else int(l)
@@ -96,12 +101,17 @@ class CTCLabTest(Document):
 
     def validate(self):
         api_args = self.fetch_api_arguments()
-        self.generate_base64(api_args)
+        #self.generate_base64(api_args)
         if self._action=='submit':
             send_email_to_patient(self)
             send_sms_to_patient(self)
+
+            self.generate_qr_code()
             
-        
+    def generate_qr_code(self):
+        if self.send_to_cwa and not self.lab_test_hash:
+            from ctc.utils import generate_qr_code_and_attach
+            generate_qr_code_and_attach(self.name)
     
     def on_cancel(self):
         self.status = "Cancelled"
