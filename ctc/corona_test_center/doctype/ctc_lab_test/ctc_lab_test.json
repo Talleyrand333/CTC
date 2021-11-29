@@ -70,6 +70,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "report_preference",
    "fieldtype": "Select",
    "label": "Report Preference",
@@ -240,7 +241,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-11-28 16:04:33.284945",
+ "modified": "2021-11-29 22:47:20.007470",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Lab Test",
