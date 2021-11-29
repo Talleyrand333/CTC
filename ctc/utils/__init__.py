@@ -3,6 +3,7 @@ import qrcode
 import json,base64,os,hashlib
 import shutil
 import time
+import random
 from frappe.utils import get_files_path
 
 
@@ -12,15 +13,17 @@ def generate_qr_code_and_attach(lab_test):
     try:
         data = get_data(lab_test)
         b64_data = convert_data(data=data)
-        generate_qr_code(b64_data=b64_data,lab_test=lab_test)
-        send_request_to_server(lab_test)
+        file_url = generate_qr_code(b64_data=b64_data,lab_test=lab_test)
+        
     except Exception as e:
         frappe.log_error(frappe.get_traceback(),'QR Code Generation Failed')
 
-    # else:
-    #     #send data to api
-    #    
-    #     frappe.db.commit()
+    else:
+        #send data to api
+        send_request_to_server(lab_test)
+        return {'file_url':file_url,'lab_test_hash':data.get('hash')}
+
+        frappe.db.commit()
 
 def get_data(lab_test):
     """get data to be sent for generation of qr codes and test results"""
@@ -79,7 +82,7 @@ def generate_qr_code(b64_data='',lab_test=''):
     if qr_code_url:
         final_url = qr_code_url + b64_data
         img = qrcode.make(final_url)
-        img_name = lab_test + '.png'
+        img_name = lab_test + '-' + generate_random() + '.png'
         img.save(img_name) #file saves to the sites folder
 
         #get cwd of the saved image
@@ -115,17 +118,14 @@ def generate_qr_code(b64_data='',lab_test=''):
         
         #set qr_code_path in labtest
        
-        # frappe.db.set_value('CTC Lab Test',lab_test,'qr_code_path',file_url)    
+        frappe.db.set_value('CTC Lab Test',lab_test,'qr_code_path',file_url)    
         # frappe.db.commit()
-        frappe.db.set_value('CTC Lab Test',lab_test,'lab_test_result','7')    
-        test = frappe.get_doc('CTC Lab Test',lab_test)
+        #frappe.db.set_value('CTC Lab Test',lab_test,'lab_test_result','7')    
+        return file_url
 
-        test.qr_code_path = file_url
-        test.save()
-        frappe.db.commit()
-        frappe.log_error(test.qr_code_path)
-        frappe.log_error(test.lab_test_result)
-
+def generate_random():
+    f_string =  ''.join(random.choices(string.ascii_lowercase + string.digits, k = 8))
+    return f_string
 
 ########################################################################
 def send_request_to_server(lab_test):
@@ -180,6 +180,9 @@ def send_request_to_server(lab_test):
         connection.request(method="POST", url=request_url, headers=request_headers, body=json.dumps(request_data))
         # Print the HTTP response from the CWA service endpoint
         response = connection.getresponse()
+        if response.status == 200 or 204:
+            
+            frappe.msgprint('Data Sent to CWA')
         data = response.read()
     except:
         frappe.log_error(frappe.get_traceback(),'send_request_to_server_failed')

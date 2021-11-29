@@ -231,6 +231,7 @@
   },
   {
    "default": "0",
+   "description": "send patient results to CWA Server",
    "fieldname": "send_to_cwa",
    "fieldtype": "Check",
    "label": "Send to CWA"
@@ -239,7 +240,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-11-27 16:06:41.828740",
+ "modified": "2021-11-28 16:04:33.284945",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Lab Test",

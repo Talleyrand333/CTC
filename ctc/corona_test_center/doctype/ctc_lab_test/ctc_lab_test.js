@@ -56,6 +56,18 @@ frappe.ui.form.on('CTC Lab Test', {
 			})
 		}
 		
+	},
+	on_submit:function(frm){
+		console.log('Helloooo')
+		
+		
+	},
+	after_workflow_action:function(frm){
+		if (frm.doc.workflow_state = 'Submitted'){
+			//cur_frm.doc.workflow_state = 'Submitted'
+			setTimeout(function(){cur_frm.print_doc() }, 2500);
+
+		}
 	}
 	
 });

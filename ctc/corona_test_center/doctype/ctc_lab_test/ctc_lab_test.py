@@ -47,7 +47,7 @@ class CTCLabTest(Document):
             })
         _file.flags.ignore_duplicate_entry_error=1
         _file.save(ignore_permissions=True)
-        self.qr_code_path = "/"+'private/files/'+prop_name
+        #self.qr_code_path = "/"+'private/files/'+prop_name
         # self.save()
         frappe.db.commit()
 
@@ -106,13 +106,21 @@ class CTCLabTest(Document):
             send_email_to_patient(self)
             send_sms_to_patient(self)
 
-            self.generate_qr_code()
-            
+
+    def on_submit(self):
+        self.generate_qr_code()
+        
+
     def generate_qr_code(self):
         if self.send_to_cwa and not self.lab_test_hash:
             from ctc.utils import generate_qr_code_and_attach
-            generate_qr_code_and_attach(self.name)
-    
+            a = generate_qr_code_and_attach(self.name)
+            self.qr_code_path = a['file_url'] 
+            self.lab_test_hash = a['lab_test_hash']
+            
+
+           
+            
     def on_cancel(self):
         self.status = "Cancelled"
 
