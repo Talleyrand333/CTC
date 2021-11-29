@@ -183,6 +183,8 @@ def send_request_to_server(lab_test):
         if response.status == 200 or 204:
             
             frappe.msgprint('Data Sent to CWA')
+        else:
+            frappe.msgprint('Data failed to send to server,please check error logs')
         data = response.read()
     except:
         frappe.log_error(frappe.get_traceback(),'send_request_to_server_failed')

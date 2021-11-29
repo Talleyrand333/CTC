@@ -154,11 +154,12 @@ def fetch_patient_status(doc):
     active = False
     existing_subs = frappe.get_all("Patient Subscription",{'patient':doc.patient},['start_date','end_date'])
     today = datetime.datetime.now()
+    default_report_preference = frappe.db.get_value('CTC Patient',doc.patient,'report_preference')
     if existing_subs:
         for each in existing_subs:
             if get_datetime(each['start_date']) <= today and get_datetime(each['end_date']) > today:
                 active = True
-    return active
+    return {'active':active,'default_report_preference':default_report_preference}
     
 
 @frappe.whitelist()
