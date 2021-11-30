@@ -14,7 +14,6 @@
   "column_break_5",
   "location",
   "report_status",
-  "lab_test_result",
   "report_preference",
   "test_time",
   "status",
@@ -60,10 +59,11 @@
    "label": "Appointment"
   },
   {
+   "description": "5=Pending,6=Negative,7=Postive,8=Invalid",
    "fieldname": "report_status",
    "fieldtype": "Select",
    "label": "Report Status",
-   "options": "Negative\nPositive\nFaulty"
+   "options": "Negative\nPositive\nInvalid\nPending\nFaulty"
   },
   {
    "fieldname": "column_break_5",
@@ -224,13 +224,6 @@
    "read_only": 1
   },
   {
-   "description": "5=Pending,6=Negative,7=Postive,8=Invalid",
-   "fieldname": "lab_test_result",
-   "fieldtype": "Select",
-   "label": "Lab Test Result",
-   "options": "\n5\n6\n7\n8"
-  },
-  {
    "default": "0",
    "description": "send patient results to CWA Server",
    "fieldname": "send_to_cwa",
@@ -241,7 +234,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-11-29 22:47:20.007470",
+ "modified": "2021-11-30 13:34:18.132216",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Lab Test",

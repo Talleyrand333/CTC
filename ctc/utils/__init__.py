@@ -170,7 +170,12 @@ def send_request_to_server(lab_test):
         data = {}
         data['timestamp'] = str(time.time())
         data['id'] = frappe.db.get_value('CTC Lab Test',lab_test,'lab_test_hash')
-        data['result'] = frappe.db.get_value('CTC Lab Test',lab_test,'lab_test_result') or 5 #5 means pending
+        report_result = {'Postive':7,'Negative':6,'Pending':5,'Invalid':8}
+        result = frappe.db.get_value('CTC Lab Test',lab_test,'report_status') or 5 #5 means pending
+        if result:
+            data['result'] =  report_result.get(result)
+        else:
+            data['result'] = 5 #5 means pending
         datalist.append(data)
 
         request_data = {}
