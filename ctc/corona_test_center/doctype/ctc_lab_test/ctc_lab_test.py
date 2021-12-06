@@ -74,13 +74,19 @@ class CTCLabTest(Document):
         
 
     def autoname(self):
-        return
-        #Generate a random 7 character string that starts with the letter T
-        prop_name = "T"+self.generate_code()
-        while frappe.db.exists(self.doctype,prop_name):
-            prop_name = "T"+self.generate_code()
-        self.name = prop_name
-        return
+        import random,string
+        
+        #Generate a random name using location abbr and random numbers 
+        rand_digits =  ''.join(random.choices(string.digits, k = 6))
+        abbr = 'CTC-LT'
+        if self.location:
+            #get_abbr from ctc location table in ctc settings
+            abbr_ = frappe.db.get_value('CTC Lab Test Location Table',{'location':self.location},'abbreviation')
+            if abbr_:
+                abbr = abbr_
+        self.name = abbr + rand_digits
+       
+        
         
 
 
@@ -155,11 +161,12 @@ def fetch_patient_status(doc):
     existing_subs = frappe.get_all("Patient Subscription",{'patient':doc.patient},['start_date','end_date'])
     today = datetime.datetime.now()
     default_report_preference = frappe.db.get_value('CTC Patient',doc.patient,'report_preference')
+    location = frappe.db.get_value('CTC Patient',doc.patient,'location')
     if existing_subs:
         for each in existing_subs:
             if get_datetime(each['start_date']) <= today and get_datetime(each['end_date']) > today:
                 active = True
-    return {'active':active,'default_report_preference':default_report_preference}
+    return {'active':active,'default_report_preference':default_report_preference,'location':location}
     
 
 @frappe.whitelist()

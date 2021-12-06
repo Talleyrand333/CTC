@@ -11,8 +11,12 @@ frappe.ui.form.on('CTC Lab Test', {
 			callback:r=>{
 				r.message['active'] == true ? frm.doc.subscription = "Active":frm.doc.subscription = "Inactive"
 				frm.set_value('report_preference',r.message['default_report_preference'])
+				frm.set_value('location',r.message['location'])
+				
 				frm.refresh_field('subscription')
 				frm.refresh_field('report_preference')
+				frm.refresh_field('location')
+
 			}
 		})
 	},

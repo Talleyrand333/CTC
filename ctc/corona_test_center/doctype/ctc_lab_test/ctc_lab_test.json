@@ -1,6 +1,5 @@
 {
  "actions": [],
- "autoname": "CTC-LT-.####",
  "creation": "2021-05-27 21:02:02.202518",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -11,6 +10,7 @@
   "appointment",
   "send_notification_in_english",
   "send_to_cwa",
+  "print_on_submit",
   "column_break_5",
   "location",
   "report_status",
@@ -59,11 +59,13 @@
    "label": "Appointment"
   },
   {
+   "default": "Negative",
    "description": "5=Pending,6=Negative,7=Postive,8=Invalid",
    "fieldname": "report_status",
    "fieldtype": "Select",
    "label": "Report Status",
-   "options": "Negative\nPositive\nInvalid\nPending\nFaulty"
+   "options": "\nNegative\nPositive\nInvalid\nPending\nFaulty",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_5",
@@ -78,10 +80,10 @@
   },
   {
    "fieldname": "location",
-   "fieldtype": "Select",
+   "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Location",
-   "options": "McDonalds\nShishaBar",
+   "options": "CTC Location",
    "reqd": 1
   },
   {
@@ -229,12 +231,20 @@
    "fieldname": "send_to_cwa",
    "fieldtype": "Check",
    "label": "Send to CWA"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "default": "0",
+   "description": "Will send document directly to printer once submitted",
+   "fieldname": "print_on_submit",
+   "fieldtype": "Check",
+   "label": "Print On Submit"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-11-30 13:34:18.132216",
+ "modified": "2021-12-06 11:10:11.729839",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Lab Test",

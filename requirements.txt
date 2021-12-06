@@ -1,3 +1,6 @@
 frappe
 twisted
 qrcode
+printnodeapi
+constants
+python-docx
