@@ -12,14 +12,15 @@ def generate_qr_code_and_attach(lab_test):
     #generate qr_code and attach to linked labtest
     try:
         data = get_data(lab_test)
+        print(data)
         b64_data = convert_data(data=data)
+        print(b64_data)
         file_url = generate_qr_code(b64_data=b64_data,lab_test=lab_test)
-        
     except Exception as e:
         frappe.log_error(frappe.get_traceback(),'QR Code Generation Failed')
 
     else:
-        #send data to api
+        #send data to cwa api
         send_request_to_server(lab_test)
         return {'file_url':file_url,'lab_test_hash':data.get('hash')}
 
@@ -30,17 +31,24 @@ def get_data(lab_test):
     if not frappe.db.exists('CTC Lab Test',lab_test):
         return
     lab_test = frappe.get_doc('CTC Lab Test',lab_test)
+    cwa_option = lab_test.cwa_options
     data = {
         'fn':frappe.db.get_value('CTC Patient',lab_test.patient,'first_name'),
         'ln':frappe.db.get_value('CTC Patient',lab_test.patient,'last_name'),
         'dob':frappe.utils.get_date_str(lab_test.date_of_birth),
-        'timestamp':str(time.time()),
+        'timestamp':int(time.time()),
         'testid':lab_test.name,
         'salt':generate_salt()
     }
-    hashed_data = generate_hash(data) #hashed data should be stored in labtest as per cwc requirements
+    hashed_data = generate_hash(data=data,cwa_option=cwa_option) #hashed data should be stored in labtest as per cwc requirements
     lab_test_hash = frappe.db.set_value('CTC Lab Test',lab_test.name,'lab_test_hash',hashed_data)
     data['hash'] = hashed_data
+    if cwa_option == 'Send without Personal Data':
+        #remove personal data from keys
+        data.pop('fn',None)
+        data.pop('ln',None)
+        data.pop('dob',None)
+        data.pop('testid',None)
     return data
 
 def generate_salt():
@@ -52,13 +60,18 @@ def generate_salt():
         salt += secrets.choice(alphabet)
     return salt
 
-def generate_hash(data={}):
+def generate_hash(data={},cwa_option=''):
     """generate_hash using request data"""
     if not data:return
-    
     timestamp = str(data['timestamp'])
-    string_value = data['dob']+ '#' + data['fn'] + '#' + data['ln'] + \
-    '#'+ timestamp + '#' + data['testid'] + '#' +  data['salt']
+
+    if cwa_option == 'Send without Personal Data':
+        #send without personal data
+        string_value = timestamp + '#' + data['salt']
+    if cwa_option == 'Send with Personal Data':
+        string_value = data['dob']+ '#' + data['fn'] + '#' + data['ln'] + \
+        '#'+ timestamp + '#' + data['testid'] + '#' +  data['salt']
+    #get_cwa sending options
     encoded = string_value.encode()
     hash_value = hashlib.sha256(encoded).hexdigest()
     return hash_value

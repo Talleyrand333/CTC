@@ -121,6 +121,7 @@ class CTCLabTest(Document):
         if self.send_to_cwa and not self.lab_test_hash:
             from ctc.utils import generate_qr_code_and_attach
             a = generate_qr_code_and_attach(self.name)
+            frappe.log_error(a)
             self.qr_code_path = a['file_url'] 
             self.lab_test_hash = a['lab_test_hash']
             

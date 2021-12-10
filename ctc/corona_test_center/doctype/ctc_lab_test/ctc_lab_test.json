@@ -10,6 +10,7 @@
   "appointment",
   "send_notification_in_english",
   "send_to_cwa",
+  "cwa_options",
   "print_on_submit",
   "column_break_5",
   "location",
@@ -230,7 +231,8 @@
    "description": "send patient results to CWA Server",
    "fieldname": "send_to_cwa",
    "fieldtype": "Check",
-   "label": "Send to CWA"
+   "label": "Send to CWA",
+   "options": "1"
   },
   {
    "allow_in_quick_entry": 1,
@@ -239,12 +241,20 @@
    "fieldname": "print_on_submit",
    "fieldtype": "Check",
    "label": "Print On Submit"
+  },
+  {
+   "default": "Send without Personal Data",
+   "depends_on": "eval:doc.send_to_cwa==1",
+   "fieldname": "cwa_options",
+   "fieldtype": "Select",
+   "label": "CWA Options",
+   "options": "Send without Personal Data\nSend with Personal Data"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-12-06 11:10:11.729839",
+ "modified": "2021-12-07 15:13:17.750740",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Lab Test",
