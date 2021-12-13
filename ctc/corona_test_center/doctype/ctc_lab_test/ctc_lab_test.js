@@ -60,6 +60,25 @@ frappe.ui.form.on('CTC Lab Test', {
 					}
 				});
 			})
+
+			//add send print button
+			frm.add_custom_button(__('Send Print'),function(){
+
+				frappe.call({
+					'method':'printnode_integration.events.print_via_printnode',
+					args:{
+						'doctype':frm.doc.doctype,
+						'docname':frm.doc.name,
+						'docevent':'Submit'
+					},
+					freeze:true,
+				    'freeze_message': __('Sending documents to the printer'),
+					callback:function(){
+						frappe.msgprint(__('Document Sent to Printer'))
+					}
+				})
+
+			})
 		}
 		
 	},

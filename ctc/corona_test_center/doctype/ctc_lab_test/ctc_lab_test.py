@@ -5,6 +5,7 @@ import frappe
 from frappe import _
 from frappe.utils import get_datetime
 from frappe.model.document import Document
+from frappe.model.naming import make_autoname
 from six import string_types
 import pytz
 
@@ -84,7 +85,8 @@ class CTCLabTest(Document):
             abbr_ = frappe.db.get_value('CTC Lab Test Location Table',{'location':self.location},'abbreviation')
             if abbr_:
                 abbr = abbr_
-        self.name = abbr + rand_digits
+        self.name = (abbr + '.' +'####')
+        self.name = make_autoname(abbr + '.####','',self)
        
         
         
