@@ -37,8 +37,8 @@ class CTCPatient(Document):
 			conditions += " AND last_name= '%s'" %self.last_name
 		if self.date_of_birth:
 			conditions += " AND date_of_birth= '%s'" %self.date_of_birth
-		if self.phone_number:
-			conditions += " AND phone_number= '%s'" %self.phone_number
+		# if self.phone_number:
+		# 	conditions += " AND phone_number= '%s'" %self.phone_number
 		
 
 		result = frappe.db.sql(""" SELECT name from `tabCTC Patient` {conditions} """.format(conditions=conditions))
