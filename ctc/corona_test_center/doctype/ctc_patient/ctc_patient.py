@@ -13,7 +13,7 @@ class CTCPatient(Document):
 		self.full_name = ' '.join(filter(lambda x: x, [self.first_name, self.last_name]))
 		self.validate_zip_code()
 		self.validate_country_code()
-		self.create_labtest()
+		#self.create_labtest()
 		self.set_subscription_status()
 	
 	def set_subscription_status(self):

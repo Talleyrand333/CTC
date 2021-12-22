@@ -2,6 +2,7 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('CTC Lab Test', {
+
 	patient: function(frm){
 		frappe.call({
 			method:'ctc.corona_test_center.doctype.ctc_lab_test.ctc_lab_test.fetch_patient_status',
@@ -100,3 +101,4 @@ frappe.ui.form.on('CTC Lab Test', {
 	// }
 	
 });
+
