@@ -40,8 +40,6 @@ class CTCPatient(Document):
 		if self.phone_number:
 			conditions += " AND phone_number= '%s'" %self.phone_number
 		
-		if self.email:
-			conditions += " AND email= '%s'" %self.email
 
 		result = frappe.db.sql(""" SELECT name from `tabCTC Patient` {conditions} """.format(conditions=conditions))
 		if result:
