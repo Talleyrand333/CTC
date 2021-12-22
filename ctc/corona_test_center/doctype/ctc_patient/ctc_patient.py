@@ -27,7 +27,21 @@ class CTCPatient(Document):
 					active = True
 		self.active_subscription = "Active" if active else "Inactive"
 	
+	def check_duplicate(self):
 
+		conditions = ""
+		if self.first_name:				 
+			conditions += " WHERE first_name='%s'" %self.first_name
+		if self.last_name:
+			conditions += " AND last_name= '%s'" %self.last_name
+		if self.date_of_birth:
+			conditions += " AND date_of_birth= '%s'" %self.date_of_birth
+		if self.phone_number:
+			conditions += " AND phone_number= '%s'" %self.phone_number
+
+		result = frappe.db.sql(""" SELECT name from `tabCTC Patient` {conditions} """.format(conditions=conditions))
+		if result:
+			frappe.throw('Duplicate Patient please check details')
 
 	def autoname(self):
 		self.full_name = ' '.join(filter(lambda x: x, [self.first_name, self.last_name]))
