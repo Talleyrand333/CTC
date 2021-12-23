@@ -298,3 +298,33 @@ def send_to_printer(**args):
         frappe.log_error(frappe.get_traceback(),'send_sms_to_patient_failed')
         frappe.local.response['message'] = 'Server Error'
         frappe.local.response['http_status_code'] = 500
+
+
+@frappe.whitelist()
+def create_lab_test_from_patient(**args):
+
+    try:
+        if args and args.get('first_name') and args.get('last_name') and args.get('date_of_birth') and args.get('location'):
+            # find matching patient and create lab_test from data sent
+            filters = {'first_name':args.get('first_name'),'last_name':args.get('last_name'),
+                    'date_of_birth':args.get('date_of_birth')}
+            name = frappe.db.get_value('CTC Patient',filters=filters,'name')
+            if name:
+                ctc_lab_test = frappe.get_doc({
+                    'doctype':'CTC Lab Test',
+                    'patient':name,
+                    'location':args.get('location')
+                })
+                ctc_lab_test.insert()
+                frappe.db.commit()
+            else:
+                frappe.local.response['message'] = 'No matching patient found'
+                frappe.local.response['http_status_code'] = 404 
+        else:
+            frappe.local.response['message'] = 'No data passed to api '
+            frappe.local.response['http_status_code'] = 400
+
+    except:
+        frappe.log_error(frappe.get_traceback(),'create_lab_test_from_patient')
+        frappe.local.response['message'] = 'Server Error'
+        frappe.local.response['http_status_code'] = 500
