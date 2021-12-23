@@ -69,7 +69,7 @@ def get_patients(**data):
 def get_lab_tests(**data):
 
     try:
-        lab_tests = frappe.get_all('CTC Lab Test', ['name','patient','report_status','status',])
+        lab_tests = frappe.get_all('CTC Lab Test', ['name','patient','creation','status',])
         frappe.local.response['message'] = 'Lab Tests Retrieved'
         frappe.local.response['http_status_code'] = 200
         frappe.local.response['data'] = lab_tests
