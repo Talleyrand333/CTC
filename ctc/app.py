@@ -317,6 +317,8 @@ def create_lab_test_from_patient(**args):
                 })
                 ctc_lab_test.insert()
                 frappe.db.commit()
+                frappe.local.response['message'] = 'Lab Test created for Patient - ' + name
+                frappe.local.response['http_status_code'] = 404 
             else:
                 frappe.local.response['message'] = 'No matching patient found'
                 frappe.local.response['http_status_code'] = 404 
