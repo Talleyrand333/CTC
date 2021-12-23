@@ -306,9 +306,9 @@ def create_lab_test_from_patient(**args):
     try:
         if args and args.get('first_name') and args.get('last_name') and args.get('date_of_birth') and args.get('location'):
             # find matching patient and create lab_test from data sent
-            filters = {'first_name':args.get('first_name'),'last_name':args.get('last_name'),
+            filter = {'first_name':args.get('first_name'),'last_name':args.get('last_name'),
                     'date_of_birth':args.get('date_of_birth')}
-            name = frappe.db.get_value('CTC Patient',filters=filters,'name')
+            name = frappe.db.get_value('CTC Patient',filter,'name')
             if name:
                 ctc_lab_test = frappe.get_doc({
                     'doctype':'CTC Lab Test',
