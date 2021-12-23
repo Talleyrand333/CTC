@@ -321,7 +321,7 @@ def create_lab_test_from_patient(**args):
                 frappe.local.response['message'] = 'No matching patient found'
                 frappe.local.response['http_status_code'] = 404 
         else:
-            frappe.local.response['message'] = 'No data passed to api '
+            frappe.local.response['message'] = 'No data passed to api or \nfirst_name,last_name,location,date_of_birth not found in data'
             frappe.local.response['http_status_code'] = 400
 
     except:
