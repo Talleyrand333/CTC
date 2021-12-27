@@ -68,11 +68,24 @@ def get_patients(**data):
 @frappe.whitelist()
 def get_lab_tests(**data):
 
+    frappe.log_error(frappe.session.user)
     try:
-        lab_tests = frappe.get_all('CTC Lab Test', ['name','patient','creation','status','send_to_cwa','cwa_options'])
-        frappe.local.response['message'] = 'Lab Tests Retrieved'
-        frappe.local.response['http_status_code'] = 200
-        frappe.local.response['data'] = lab_tests
+        user = frappe.session.user
+        if user and user != 'Administrator':
+            location = frappe.db.get_value('User Permission',{'user':user,'allow':'CTC Location'},'for_value')
+            doc_filter = {'location':location}
+            lab_tests = frappe.get_all('CTC Lab Test', ['name','patient','creation','status','send_to_cwa','cwa_options'],doc_filter)
+            
+            frappe.local.response['message'] = 'Lab Tests Retrieved'
+            frappe.local.response['http_status_code'] = 200
+            frappe.local.response['data'] = lab_tests
+        else:
+            lab_tests = frappe.get_all('CTC Lab Test', ['name','patient','creation','status','send_to_cwa','cwa_options'])
+
+            #get user permission for user
+            frappe.local.response['message'] = 'Lab Tests Retrieved'
+            frappe.local.response['http_status_code'] = 200
+            frappe.local.response['data'] = lab_tests
     except:
         frappe.log_error(frappe.get_traceback(),'get_all_lab_tests_api_call_failed')
         frappe.local.response['message'] = 'Error Retrieving Lab Test Data'
@@ -81,8 +94,7 @@ def get_lab_tests(**data):
 
 @frappe.whitelist()
 def update_patient(**args):
-    try:
-            
+    try:   
         if args:
             args = frappe._dict(args)
             #update patient 
@@ -194,6 +206,7 @@ def create_lab_test(**args):
                 "report_preference": args.get("report_preference"),
                 "test_time": args.get("test_time"),
                 "status": args.get('status'),
+                "workflow_state":args.get('status')
                 #"full_name": args.get("full_name"),
                 #"street": args.get("street"),
                 #"zipcode": args.get('zipcode'),
