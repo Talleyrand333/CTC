@@ -69,7 +69,7 @@ def get_patients(**data):
 def get_lab_tests(**data):
 
     try:
-        lab_tests = frappe.get_all('CTC Lab Test', ['name','patient','creation','status',])
+        lab_tests = frappe.get_all('CTC Lab Test', ['name','patient','creation','status','send_to_cwa','cwa_options'])
         frappe.local.response['message'] = 'Lab Tests Retrieved'
         frappe.local.response['http_status_code'] = 200
         frappe.local.response['data'] = lab_tests
@@ -193,7 +193,7 @@ def create_lab_test(**args):
                 "report_status": args.get("report_status"),
                 "report_preference": args.get("report_preference"),
                 "test_time": args.get("test_time"),
-                #"status": args.get('status'),
+                "status": args.get('status'),
                 #"full_name": args.get("full_name"),
                 #"street": args.get("street"),
                 #"zipcode": args.get('zipcode'),
@@ -211,6 +211,7 @@ def create_lab_test(**args):
             lab_test.insert()
             frappe.local.response['message'] = 'CTC Lab Test created successfully'
             frappe.local.response['http_status_code'] = 200
+            frappe.local.response['data'] = {'lab_test_id':lab_test.name}
         else:
             frappe.local.response['message'] = 'no data sent'
             frappe.local.response['http_status_code'] = 400
@@ -318,7 +319,8 @@ def create_lab_test_from_patient(**args):
                 ctc_lab_test.insert()
                 frappe.db.commit()
                 frappe.local.response['message'] = 'Lab Test created for Patient - ' + name
-                frappe.local.response['http_status_code'] = 404 
+                frappe.local.response['http_status_code'] = 200
+                frappe.local.response['data'] = {'lab_test_id':ctc_lab_test.name} 
             else:
                 frappe.local.response['message'] = 'No matching patient found'
                 frappe.local.response['http_status_code'] = 404 
