@@ -1,19 +1,19 @@
 frappe.listview_settings['CTC Lab Test'] = {
-	add_fields: ["patient",'testname','location','report_status','status'],
-	get_indicator: function(doc) {
-		var status_color = {
-			"Draft": "grey",
-			"Tested": "yellow",
-            'Cancelled':'blue',
-           
-		};
-		return [__(doc.status), status_color[doc.status], "status,=,"+doc.status];
+	add_fields: ["status","patient" ],
+	get_indicator: function (doc) {
+		if (doc.status === "Draft") {
+			// Active
+			return [__("Draft"), "gray", "status,=,Draft"];
+		} else if (doc.status === "Cancelled") {
+			// on hold
+			return [__("Cancelled"), "red", "status,=,Cancelled"];
+		} else if (doc.status === "On Hold") {
+			return [__("On Hold"), "orange", "status,=,On Hold"];
+		} else if (doc.status === "Submitted") {
+			return [__("Submitted"), "green", "status,=,Submitted"];
+		}
 	},
-	// onload: function(){
-	// 	console.log(cur_dialog.doc.status)
-	// }
-	
-};
+}
 
 // let old_quick_entry = frappe.ui.form.make_quick_entry;
 

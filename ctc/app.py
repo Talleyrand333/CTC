@@ -68,7 +68,6 @@ def get_patients(**data):
 @frappe.whitelist()
 def get_lab_tests(**data):
 
-    frappe.log_error(frappe.session.user)
     try:
         user = frappe.session.user
         if user and user != 'Administrator':
@@ -98,6 +97,7 @@ def update_patient(**args):
         if args:
             args = frappe._dict(args)
             #update patient 
+            frappe.log_error(args)
             name = args.get('patient_name') or args.get('name')
             if frappe.db.exists('CTC Patient',name):
                 doc = frappe.get_doc('CTC Patient',name)
@@ -131,6 +131,8 @@ def update_lab_test(**args):
             if frappe.db.exists('CTC Lab Test',name):
                 doc = frappe.get_doc('CTC Lab Test',name)
                 doc.update(args)
+                if args.status:
+                    doc.workflow_state = args.status
                 doc.save()
                 frappe.db.commit()
                 frappe.local.response['message'] = 'Lab Test updated successfully'
