@@ -133,7 +133,10 @@ def update_lab_test(**args):
                 doc.update(args)
                 if args.status:
                     doc.workflow_state = args.status
-                doc.save()
+                if args.status == 'Submitted':
+                    doc.submit()
+                else:
+                    doc.save()
                 frappe.db.commit()
                 frappe.local.response['message'] = 'Lab Test updated successfully'
                 frappe.local.response['http_status_code'] = 200
