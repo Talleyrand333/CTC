@@ -29,7 +29,7 @@ class CTCPatient(Document):
 		self.active_subscription = "Active" if active else "Inactive"
 	
 	def check_duplicate(self):
-
+		if not self.is_new():return
 		conditions = ""
 		if self.first_name:				 
 			conditions += " WHERE first_name='%s'" %self.first_name
@@ -41,7 +41,8 @@ class CTCPatient(Document):
 		# 	conditions += " AND phone_number= '%s'" %self.phone_number
 		
 
-		result = frappe.db.sql(""" SELECT name from `tabCTC Patient` {conditions} """.format(conditions=conditions))
+		result = frappe.db.sql(""" SELECT name from `tabCTC Patient` {conditions} """.format(conditions=conditions),as_dict=1)
+		print(result)
 		if result:
 			frappe.throw('Duplicate Patient please check details')
 
