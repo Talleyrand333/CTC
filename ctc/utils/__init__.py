@@ -34,7 +34,7 @@ def get_data(lab_test):
         'fn':frappe.db.get_value('CTC Patient',lab_test.patient,'first_name'),
         'ln':frappe.db.get_value('CTC Patient',lab_test.patient,'last_name'),
         'dob':frappe.utils.get_date_str(lab_test.date_of_birth),
-        'timestamp':int(time.time()),
+        'timestamp':int(lab_test.test_time.timestamp()),
         'testid':lab_test.name,
         'salt':generate_salt()
     }
@@ -179,7 +179,7 @@ def send_request_to_server(lab_test):
         #prepare_data
         datalist = []
         data = {}
-        data['timestamp'] = str(time.time())
+        data['timestamp'] = str(frappe.db.get_value('CTC Lab Test',lab_test,'test_time').timestamp())
         data['id'] = frappe.db.get_value('CTC Lab Test',lab_test,'lab_test_hash')
         report_result = {'Positive':7,'Negative':6,'Pending':5,'Invalid':8}
         result = frappe.db.get_value('CTC Lab Test',lab_test,'report_status') or 5 #5 means pending
