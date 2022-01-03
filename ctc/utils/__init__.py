@@ -12,9 +12,7 @@ def generate_qr_code_and_attach(lab_test):
     #generate qr_code and attach to linked labtest
     try:
         data = get_data(lab_test)
-        print(data)
         b64_data = convert_data(data=data)
-        print(b64_data)
         file_url = generate_qr_code(b64_data=b64_data,lab_test=lab_test)
     except Exception as e:
         frappe.log_error(frappe.get_traceback(),'QR Code Generation Failed')
@@ -183,7 +181,7 @@ def send_request_to_server(lab_test):
         data = {}
         data['timestamp'] = str(time.time())
         data['id'] = frappe.db.get_value('CTC Lab Test',lab_test,'lab_test_hash')
-        report_result = {'Postive':7,'Negative':6,'Pending':5,'Invalid':8}
+        report_result = {'Positive':7,'Negative':6,'Pending':5,'Invalid':8}
         result = frappe.db.get_value('CTC Lab Test',lab_test,'report_status') or 5 #5 means pending
         if result:
             data['result'] =  report_result.get(result)
