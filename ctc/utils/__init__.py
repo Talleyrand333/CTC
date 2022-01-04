@@ -5,7 +5,7 @@ import shutil
 import time
 import random
 from frappe.utils import get_files_path
-
+import datetime
 
 
 def generate_qr_code_and_attach(lab_test):
@@ -38,6 +38,8 @@ def get_data(lab_test):
         'testid':lab_test.name,
         'salt':generate_salt()
     }
+    ts = datetime.datetime.fromtimestamp(data['timestamp'])
+    frappe.log_error(data['timestamp'],'ts1')
     hashed_data = generate_hash(data=data,cwa_option=cwa_option) #hashed data should be stored in labtest as per cwc requirements
     lab_test_hash = frappe.db.set_value('CTC Lab Test',lab_test.name,'lab_test_hash',hashed_data)
     data['hash'] = hashed_data
@@ -179,7 +181,10 @@ def send_request_to_server(lab_test):
         #prepare_data
         datalist = []
         data = {}
-        data['timestamp'] = str(frappe.db.get_value('CTC Lab Test',lab_test,'test_time').timestamp())
+        data['sc'] = str(int(frappe.db.get_value('CTC Lab Test',lab_test,'test_time').timestamp()))
+        ts = data['sc']     
+        frappe.log_error(ts,'ts2')
+
         data['id'] = frappe.db.get_value('CTC Lab Test',lab_test,'lab_test_hash')
         report_result = {'Positive':7,'Negative':6,'Pending':5,'Invalid':8}
         result = frappe.db.get_value('CTC Lab Test',lab_test,'report_status') or 5 #5 means pending

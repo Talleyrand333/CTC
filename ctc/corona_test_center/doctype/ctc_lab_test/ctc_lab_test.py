@@ -114,10 +114,11 @@ class CTCLabTest(Document):
             send_email_to_patient(self)
             send_sms_to_patient(self)
         
-        if self.has_value_changed('report_status'):
+        if self.has_value_changed('status') and self.status != 'Submitted':
             #update the test date
-            self.test_time = frappe.utils.get_datetime_str(frappe.utils.get_datetime())
-
+            test_time = frappe.utils.get_datetime_str(frappe.utils.get_datetime())
+            self.test_time = test_time
+            frappe.db.commit()
 
     def on_submit(self):
         self.generate_qr_code()
@@ -127,8 +128,8 @@ class CTCLabTest(Document):
         if self.send_to_cwa and not self.lab_test_hash:
         #if self.report_status and self.report_status != "Positive":
             from ctc.utils import generate_qr_code_and_attach
+            frappe.log_error(self.test_time)
             a = generate_qr_code_and_attach(self.name)
-            frappe.log_error(a)
             self.qr_code_path = a['file_url'] 
             self.lab_test_hash = a['lab_test_hash']
             
