@@ -39,7 +39,6 @@ def get_data(lab_test):
         'salt':generate_salt()
     }
     ts = datetime.datetime.fromtimestamp(data['timestamp'])
-    frappe.log_error(data['timestamp'],'ts1')
     hashed_data = generate_hash(data=data,cwa_option=cwa_option) #hashed data should be stored in labtest as per cwc requirements
     lab_test_hash = frappe.db.set_value('CTC Lab Test',lab_test.name,'lab_test_hash',hashed_data)
     data['hash'] = hashed_data
@@ -206,5 +205,5 @@ def send_request_to_server(lab_test):
         else:
             frappe.msgprint('Data failed to send to server,please check error logs')
         data = response.read()
-    except:
+    except Exception as e:
         frappe.log_error(frappe.get_traceback(),'send_request_to_server_failed')
