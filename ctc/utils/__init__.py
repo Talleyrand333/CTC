@@ -183,7 +183,6 @@ def send_request_to_server(lab_test):
         data = {}
         data['sc'] = str(int(frappe.db.get_value('CTC Lab Test',lab_test,'test_time').timestamp()))
         ts = data['sc']     
-        frappe.log_error(ts,'ts2')
 
         data['id'] = frappe.db.get_value('CTC Lab Test',lab_test,'lab_test_hash')
         report_result = {'Positive':7,'Negative':6,'Pending':5,'Invalid':8}

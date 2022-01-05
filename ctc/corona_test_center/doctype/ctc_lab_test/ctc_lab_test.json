@@ -61,12 +61,13 @@
   },
   {
    "default": "Negative",
+   "depends_on": "eval:doc.status==\"Tested\"",
    "description": "5=Pending,6=Negative,7=Postive,8=Invalid",
    "fieldname": "report_status",
    "fieldtype": "Select",
    "label": "Report Status",
-   "options": "\nNegative\nPositive\nInvalid\nPending\nFaulty",
-   "reqd": 1
+   "mandatory_depends_on": "eval:doc.status=='Tested'",
+   "options": "\nNegative\nPositive\nInvalid\nPending\nFaulty"
   },
   {
    "fieldname": "column_break_5",
@@ -257,7 +258,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-01-02 04:23:31.343219",
+ "modified": "2022-01-04 11:40:12.794902",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Lab Test",
