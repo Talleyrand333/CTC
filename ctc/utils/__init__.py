@@ -12,9 +12,7 @@ def generate_qr_code_and_attach(lab_test):
     #generate qr_code and attach to linked labtest
     try:
         data = get_data(lab_test)
-        print(data,'data')
         b64_data = convert_data(data=data)
-        print(b64_data,'b64_data')
         file_url = generate_qr_code(b64_data=b64_data,lab_test=lab_test)
     except Exception as e:
         frappe.log_error(frappe.get_traceback(),'QR Code Generation Failed')
@@ -93,7 +91,6 @@ def generate_qr_code(b64_data='',lab_test=''):
     """generate qr_code image and attach to lab_test"""
     if not b64_data and lab_test:return
     qr_code_url = frappe.db.get_single_value('CTC Settings','qr_code_url')
-    print(qr_code_url)
     if qr_code_url:
         final_url = qr_code_url + b64_data
         img = qrcode.make(final_url)
@@ -197,7 +194,6 @@ def send_request_to_server(lab_test):
         
         request_data = {}
         request_data['testResults'] = datalist
-        print(request_data)
         #send request 
         connection.request(method="POST", url=request_url, headers=request_headers, body=json.dumps(request_data))
         # Print the HTTP response from the CWA service endpoint
