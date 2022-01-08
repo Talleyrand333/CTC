@@ -138,7 +138,8 @@ class CTCLabTest(Document):
 
     def on_submit(self):
         self.generate_qr_code()
-
+        if not self.report_status:
+            frappe.throw('You must set a report status before submitting')
         
 
     def generate_qr_code(self):
