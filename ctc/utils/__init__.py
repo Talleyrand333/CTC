@@ -12,7 +12,9 @@ def generate_qr_code_and_attach(lab_test):
     #generate qr_code and attach to linked labtest
     try:
         data = get_data(lab_test)
+        print(data,'data')
         b64_data = convert_data(data=data)
+        print(b64_data,'b64_data')
         file_url = generate_qr_code(b64_data=b64_data,lab_test=lab_test)
     except Exception as e:
         frappe.log_error(frappe.get_traceback(),'QR Code Generation Failed')
@@ -91,6 +93,7 @@ def generate_qr_code(b64_data='',lab_test=''):
     """generate qr_code image and attach to lab_test"""
     if not b64_data and lab_test:return
     qr_code_url = frappe.db.get_single_value('CTC Settings','qr_code_url')
+    print(qr_code_url)
     if qr_code_url:
         final_url = qr_code_url + b64_data
         img = qrcode.make(final_url)
@@ -136,7 +139,7 @@ def generate_qr_code(b64_data='',lab_test=''):
         return file_url
 
 def generate_random():
-    f_string =  ''.join(random.choices(string.ascii_lowercase + string.digits, k = 8))
+    f_string =  ''.join(random.choices(string.ascii_uppercase + string.digits, k = 10))
     return f_string
 
 ########################################################################
@@ -191,10 +194,10 @@ def send_request_to_server(lab_test):
         else:
             data['result'] = 5 #5 means pending
         datalist.append(data)
-
+        
         request_data = {}
         request_data['testResults'] = datalist
-        
+        print(request_data)
         #send request 
         connection.request(method="POST", url=request_url, headers=request_headers, body=json.dumps(request_data))
         # Print the HTTP response from the CWA service endpoint
@@ -203,7 +206,35 @@ def send_request_to_server(lab_test):
             
             frappe.msgprint('Data Sent to CWA')
         else:
-            frappe.msgprint('Data failed to send to server,please check error logs')
+            frappe.msgprint('Invalid Response from server check error logs')
         data = response.read()
     except Exception as e:
+        frappe.msgprint('Data failed to send to server,please check error logs')
         frappe.log_error(frappe.get_traceback(),'send_request_to_server_failed')
+
+def generate_lab_code(docname,test_id):
+    
+    data = {'docname':docname,'test_id':test_id}
+    str_data = json.dumps(data)
+    byte_data = str_data.encode()
+    b64_data = base64.b64encode(byte_data).decode()
+    img = qrcode.make(docname)
+
+    img_name = docname + "-" + test_id +".png"
+    save_path = frappe.get_site_path() +"/"+'private/files/'+ img_name
+    img.save(save_path,format="PNG")
+    _file = frappe.get_doc({
+            "doctype": "File",
+            "file_name":img_name,
+            "attached_to_doctype": 'CTC Lab Test',
+            "attached_to_name": docname,
+            'file_url':'/private/files/'+img_name,
+        })
+    _file.flags.ignore_duplicate_entry_error=1
+    _file.save(ignore_permissions=True)
+
+    #set label path
+    frappe.db.set_value('CTC Lab Test',docname,'label_path','/private/files/'+img_name)
+    image_path = '/private/files/'+img_name
+    frappe.db.commit()
+    return image_path

@@ -90,8 +90,20 @@ class CTCLabTest(Document):
        
         
         
-
-
+    def generate_lab_test_code(self):
+        
+        from ctc.utils import generate_lab_code
+        generate = frappe.db.get_single_value('CTC Settings','generate_print_label')
+        id_number = frappe.db.get_value('CTC Patient',self.patient,'id_number')
+        if not id_number:
+            from ctc.utils import generate_random
+            id_number = generate_random()
+            frappe.db.set_value('CTC Patient',self.patient,'id_number',id_number)
+        if generate and id_number:
+            
+            label_path = generate_lab_code(self.name,id_number)
+            self.label_path = label_path
+  
     def generate_code(self,l=None,is_hex=True):
         return
         #Generate a string of random characters of the required length and format, it has been defaulted to 6 characters in base 10
@@ -113,7 +125,11 @@ class CTCLabTest(Document):
         if self._action=='submit':
             send_email_to_patient(self)
             send_sms_to_patient(self)
-        
+        if self.status =='Tested':
+            self.generate_lab_test_code()
+            #send label to printer
+            from printnode_integration.events import print_via_printnode
+            print_via_printnode(self.doctype,self.name,'Tested')
         if self.has_value_changed('status') and self.status != 'Submitted':
             #update the test date
             test_time = frappe.utils.get_datetime_str(frappe.utils.get_datetime())
@@ -122,6 +138,7 @@ class CTCLabTest(Document):
 
     def on_submit(self):
         self.generate_qr_code()
+
         
 
     def generate_qr_code(self):

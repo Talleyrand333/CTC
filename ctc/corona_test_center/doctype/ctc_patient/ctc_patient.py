@@ -7,6 +7,7 @@ from frappe.model.document import Document
 from six import string_types
 import json,datetime
 from frappe.utils import get_datetime
+from ctc.utils import generate_random
 class CTCPatient(Document):
 
 	def validate(self):
@@ -16,6 +17,7 @@ class CTCPatient(Document):
 		self.check_duplicate()
 		#self.create_labtest()
 		self.set_subscription_status()
+		self.id_number = generate_random()
 	
 	def set_subscription_status(self):
 		import datetime

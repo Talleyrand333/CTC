@@ -23,6 +23,8 @@
   "street",
   "zipcode",
   "phone_number",
+  "label_image",
+  "label_path",
   "column_break_15",
   "subscription",
   "hash_content",
@@ -253,12 +255,25 @@
    "fieldtype": "Select",
    "label": "CWA Options",
    "options": "Send without Personal Data\nSend with Personal Data"
+  },
+  {
+   "fieldname": "label_image",
+   "fieldtype": "Image",
+   "label": "Label Image",
+   "options": "label_path",
+   "read_only": 1
+  },
+  {
+   "fieldname": "label_path",
+   "fieldtype": "Data",
+   "label": "Label Path",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-01-04 11:40:12.794902",
+ "modified": "2022-01-05 18:16:13.393058",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Lab Test",
