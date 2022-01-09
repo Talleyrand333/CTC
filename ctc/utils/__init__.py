@@ -208,7 +208,7 @@ def send_request_to_server(lab_test):
         frappe.msgprint('Data failed to send to server,please check error logs')
         frappe.log_error(frappe.get_traceback(),'send_request_to_server_failed')
 
-def generate_lab_code(docname,test_id):
+def generate_lab_code(docname):
     
     data = {'docname':docname,'test_id':test_id}
     str_data = json.dumps(data)

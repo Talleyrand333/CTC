@@ -95,13 +95,13 @@ class CTCLabTest(Document):
         from ctc.utils import generate_lab_code
         generate = frappe.db.get_single_value('CTC Settings','generate_print_label')
         id_number = frappe.db.get_value('CTC Patient',self.patient,'id_number')
-        if not id_number:
-            from ctc.utils import generate_random
-            id_number = generate_random()
-            frappe.db.set_value('CTC Patient',self.patient,'id_number',id_number)
-        if generate and id_number:
+        # if not id_number:
+        #     from ctc.utils import generate_random
+        #     id_number = generate_random()
+        #     frappe.db.set_value('CTC Patient',self.patient,'id_number',id_number)
+        if generate:
             
-            label_path = generate_lab_code(self.name,id_number)
+            label_path = generate_lab_code(self.name)
             self.label_path = label_path
   
     def generate_code(self,l=None,is_hex=True):
