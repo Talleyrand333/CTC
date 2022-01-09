@@ -17,7 +17,7 @@ class CTCPatient(Document):
 		self.check_duplicate()
 		#self.create_labtest()
 		self.set_subscription_status()
-		self.id_number = generate_random()
+		#self.id_number = generate_random()
 	
 	def set_subscription_status(self):
 		import datetime
