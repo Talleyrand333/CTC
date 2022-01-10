@@ -214,9 +214,9 @@ def generate_lab_code(docname):
     str_data = json.dumps(data)
     byte_data = str_data.encode()
     b64_data = base64.b64encode(byte_data).decode()
-    img = qrcode.make(docname)
+    img = qrcode.make(docname,border=1,box_size=100)
 
-    img_name = docname + "-" + test_id +".png"
+    img_name = docname + "-" +".png"
     save_path = frappe.get_site_path() +"/"+'private/files/'+ img_name
     img.save(save_path,format="PNG")
     _file = frappe.get_doc({
