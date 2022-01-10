@@ -210,10 +210,7 @@ def send_request_to_server(lab_test):
 
 def generate_lab_code(docname):
     
-    data = {'docname':docname,'test_id':test_id}
-    str_data = json.dumps(data)
-    byte_data = str_data.encode()
-    b64_data = base64.b64encode(byte_data).decode()
+   
     img = qrcode.make(docname,border=1,box_size=100)
 
     img_name = docname + "-" +".png"
