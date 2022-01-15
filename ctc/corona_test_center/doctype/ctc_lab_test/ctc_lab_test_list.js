@@ -1,18 +1,44 @@
 frappe.listview_settings['CTC Lab Test'] = {
 	add_fields: ["status","patient" ],
-	get_indicator: function (doc) {
-		if (doc.status === "Draft") {
-			// Active
-			return [__("Draft"), "gray", "status,=,Draft"];
-		} else if (doc.status === "Cancelled") {
-			// on hold
-			return [__("Cancelled"), "red", "status,=,Cancelled"];
-		} else if (doc.status === "On Hold") {
-			return [__("On Hold"), "orange", "status,=,On Hold"];
-		} else if (doc.status === "Submitted") {
-			return [__("Submitted"), "green", "status,=,Submitted"];
-		}
+	get_indicator: function(doc) {
+		var colors = {
+            "Draft": "red",
+			"Tested": "blue",
+			"Submitted": "blue",
+            "Cancelled": "grey",
+			"In Progress": "yellow",
+			"Picked Up": "green",
+			"Ready To Pick Up": "orange",
+		};
+		return [__(doc.status), colors[doc.status], "status,=," + doc.status];
 	},
+	button: {
+        show: function(doc) {
+            return true;
+        },
+        get_label: function() {
+            return __('Change Status');
+        },
+        get_description: function(doc) {
+            return  ('Print {0}', [doc.name])
+        },
+        action: function(doc) {
+            let dt= doc.doctype
+            let dn= doc.name
+            frappe.call({
+				async:false,
+                method: 'ctc.app.test',
+                args: {
+                    name:doc.name
+                },
+                callback: (r) => {
+                },
+                error: (r) => {
+                    // on error
+                }
+            })
+        }
+    }
 }
 
 // let old_quick_entry = frappe.ui.form.make_quick_entry;
@@ -32,4 +58,3 @@ frappe.listview_settings['CTC Lab Test'] = {
 
 // frappe.ui.form.make_quick_entry = new_quick_entry;
 // console.log(cur_dialog,'hello')
-

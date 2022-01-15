@@ -2,6 +2,32 @@ import frappe
 import json
 
 @frappe.whitelist()
+def test(name):
+    doc=frappe.get_doc('CTC Lab Test',name)
+    if doc.status=='Draft' and doc.docstatus == 0:
+        doc.submit()
+        doc.status='In Progress'
+        doc.submit()
+        doc.notify_update()
+    elif doc.status=='Draft' and doc.docstatus == 1:
+        doc.status='In Progress'
+        doc.submit()
+        doc.notify_update()
+    elif doc.status=='Submitted' and doc.docstatus == 1:
+        doc.status='Picked Up'
+        doc.submit()
+        doc.notify_update()
+    elif doc.status=='Tested' and doc.docstatus == 1:
+        doc.status='Ready To Pick Up'
+        doc.submit()
+        doc.notify_update()
+    elif doc.status=='Tested' and doc.docstatus == 0:
+        doc.submit()
+        doc.status='Ready To Pick Up'
+        doc.submit()
+        doc.notify_update()
+
+@frappe.whitelist()
 def get_patient(**data):
     try:
         if not data.get('patient_name'):
