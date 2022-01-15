@@ -73,3 +73,13 @@ frappe.ui.form.CTCLabTestsQuickEntryForm = frappe.ui.form.QuickEntryForm.extend(
 		console.log('jslsj')
 	}
 })
+// $(document).ready(function(){
+// 	console.log('hello')
+// 	$('input[data-fieldname="location"]').on('change',function(){
+// 		console.log('changes')
+// 	})
+// })
+// $(document).on('change', 'input[data-fieldname="location"]', function(){
+//     console.log('OK');
+// });
+// //$('input[data-fieldname="location"]').val('Hello')

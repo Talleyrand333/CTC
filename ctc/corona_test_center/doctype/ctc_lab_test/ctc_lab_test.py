@@ -232,6 +232,16 @@ def send_email_to_patient(doc):
         doc= frappe.get_doc(doc)
     if doc.report_preference=="Email" and doc.report_status!='Faulty':
         template = frappe.get_doc("CTC Settings")
+        password = None
+        if template.encrypt_ctc_lab_test_attachment:
+        #get_criteria #date of birth is hardcoded
+            print(type(doc.date_of_birth))
+            if isinstance(doc.date_of_birth,string_types):
+                password_list = doc.date_of_birth.split('-')
+                password = password_list[2] + password_list[1] + password_list[0]
+                
+            else:
+                password = datetime.datetime.strftime(doc.date_of_birth,"%d%m%Y")
         if not(template.get('postive_email_template') or template.get('negative_email_template')):
             frappe.throw(_("Please ensure that all template fields in CTC Settings page are filled"))
         positive = frappe.get_doc("Email Template",template.positive_email_template) 
@@ -243,17 +253,17 @@ def send_email_to_patient(doc):
         formated_date = datetime.datetime.strftime(date_,"%d.%m.%Y")
         data['formated_date']=formated_date
         message = positive if doc.report_status =="Positive" else negative
-        
+
         email_args = {
                 "recipients": [doc.email],
                 "message": frappe.render_template(message.response,data),
                 "subject": message.subject,
-                "attachments": [frappe.attach_print("CTC Lab Test", doc.name)],
+                "attachments": [frappe.attach_print("CTC Lab Test", doc.name,password=password)],
                 "reference_doctype": doc.doctype,
                 "reference_name": doc.name
                 
         }
-        
+
         frappe.sendmail(recipients=email_args['recipients'],
         message=email_args['message'],
         subject=email_args['subject'],
@@ -262,7 +272,7 @@ def send_email_to_patient(doc):
         reference_name=doc.name)
         if negative2 and positive2:
             message2=  positive2 if doc.report_status =="Positive" else negative2
-            email_args['attachments2'] = [frappe.attach_print('CTC Lab Test',doc.name,file_name=doc.name,print_format=template.print_format_for_english_notification)]
+            email_args['attachments2'] = [frappe.attach_print('CTC Lab Test',doc.name,file_name=doc.name,print_format=template.print_format_for_english_notification,password=password)]
             email_args['eng_msg'] = frappe.render_template(message2.response,data)
             email_args['eng_sub'] = message2.subject
             

@@ -211,7 +211,7 @@ def send_request_to_server(lab_test):
 def generate_lab_code(docname):
     
    
-    img = qrcode.make(docname,border=1,box_size=100)
+    img = qrcode.make(docname,border=0.6,box_size=100)
 
     img_name = docname + "-" +".png"
     save_path = frappe.get_site_path() +"/"+'private/files/'+ img_name
