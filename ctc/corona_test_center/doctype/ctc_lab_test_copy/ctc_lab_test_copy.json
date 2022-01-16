@@ -1,0 +1,291 @@
+{
+ "actions": [],
+ "creation": "2021-12-27 17:58:47.731246",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "patient",
+  "test_name",
+  "appointment",
+  "send_notification_in_english",
+  "send_to_cwa",
+  "cwa_options",
+  "print_on_submit",
+  "column_break_5",
+  "location",
+  "report_status",
+  "report_preference",
+  "test_time",
+  "status",
+  "patient_information_section",
+  "full_name",
+  "street",
+  "zipcode",
+  "phone_number",
+  "column_break_15",
+  "subscription",
+  "hash_content",
+  "date_of_birth",
+  "street_number",
+  "town",
+  "email",
+  "amended_from",
+  "intro_email_sent",
+  "appointment_end",
+  "qr_code",
+  "qr_code_path",
+  "lab_test_hash",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "patient",
+   "fieldtype": "Link",
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Patient",
+   "options": "CTC Patient",
+   "reqd": 1
+  },
+  {
+   "fieldname": "test_name",
+   "fieldtype": "Select",
+   "label": "Test Name",
+   "options": "Kostenloser B\u00fcrgertest"
+  },
+  {
+   "fieldname": "appointment",
+   "fieldtype": "Datetime",
+   "label": "Appointment"
+  },
+  {
+   "default": "0",
+   "fieldname": "send_notification_in_english",
+   "fieldtype": "Check",
+   "label": "Send Notification in English"
+  },
+  {
+   "default": "0",
+   "description": "send patient results to CWA Server",
+   "fieldname": "send_to_cwa",
+   "fieldtype": "Check",
+   "label": "Send to CWA",
+   "options": "1"
+  },
+  {
+   "default": "Send without Personal Data",
+   "depends_on": "eval:doc.send_to_cwa==1",
+   "fieldname": "cwa_options",
+   "fieldtype": "Select",
+   "label": "CWA Options",
+   "options": "Send without Personal Data\nSend with Personal Data"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "default": "0",
+   "description": "Will send document directly to printer once submitted",
+   "fieldname": "print_on_submit",
+   "fieldtype": "Check",
+   "label": "Print On Submit"
+  },
+  {
+   "fieldname": "column_break_5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Location",
+   "options": "CTC Location",
+   "reqd": 1
+  },
+  {
+   "default": "Negative",
+   "description": "5=Pending,6=Negative,7=Postive,8=Invalid",
+   "fieldname": "report_status",
+   "fieldtype": "Select",
+   "label": "Report Status",
+   "options": "\nNegative\nPositive\nInvalid\nPending\nFaulty",
+   "reqd": 1
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "report_preference",
+   "fieldtype": "Select",
+   "label": "Report Preference",
+   "options": "Email\nSMS\nPrint"
+  },
+  {
+   "default": "now",
+   "fieldname": "test_time",
+   "fieldtype": "Datetime",
+   "label": "Test Date"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Draft\nTested\nSubmitted\nCancelled"
+  },
+  {
+   "fieldname": "patient_information_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fetch_from": "patient.full_name",
+   "fieldname": "full_name",
+   "fieldtype": "Data",
+   "label": "Full Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "patient.street",
+   "fieldname": "street",
+   "fieldtype": "Data",
+   "label": "Street",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "patient.zip_code",
+   "fieldname": "zipcode",
+   "fieldtype": "Data",
+   "label": "Zip code",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "patient.phone_number",
+   "fieldname": "phone_number",
+   "fieldtype": "Data",
+   "label": "Phone Number",
+   "options": "Phone",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_15",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "subscription",
+   "fieldtype": "Select",
+   "label": "Subscription Status",
+   "options": "\nActive\nInactive",
+   "read_only": 1
+  },
+  {
+   "fieldname": "hash_content",
+   "fieldtype": "Small Text",
+   "label": "Hash Content",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "patient.date_of_birth",
+   "fieldname": "date_of_birth",
+   "fieldtype": "Date",
+   "label": "Date of Birth",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "patient.street_number",
+   "fieldname": "street_number",
+   "fieldtype": "Data",
+   "label": "Street Number"
+  },
+  {
+   "fetch_from": "patient.towncity",
+   "fieldname": "town",
+   "fieldtype": "Data",
+   "label": "Town",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "patient.email",
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "options": "Email",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "CTC Lab Test",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "intro_email_sent",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Intro Email Sent"
+  },
+  {
+   "fieldname": "appointment_end",
+   "fieldtype": "Datetime",
+   "hidden": 1,
+   "label": "Appointment End",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "qr_code",
+   "fieldtype": "Image",
+   "label": "QR Code",
+   "options": "qr_code_path"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "qr_code_path",
+   "fieldtype": "Data",
+   "label": "QR Code Path"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "lab_test_hash",
+   "fieldtype": "Data",
+   "label": "Lab Test Hash",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "CTC Lab Test Copy",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2021-12-27 17:58:47.731246",
+ "modified_by": "Administrator",
+ "module": "Corona Test Center",
+ "name": "CTC Lab Test Copy",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "patient",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}
