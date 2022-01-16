@@ -120,6 +120,7 @@ class CTCLabTest(Document):
         return(txn_)
 
     def validate(self):
+        create_queue(self)
         api_args = self.fetch_api_arguments()
         #self.generate_base64(api_args)
         if self._action=='submit':
@@ -176,6 +177,27 @@ class CTCLabTest(Document):
         tz = pytz.timezone('Europe/Berlin')
         now=datetime.datetime.now(tz)
         self.test_time = datetime.datetime(now.year,now.month,now.day,now.hour,now.minute,now.second)
+
+def create_queue(self):
+        if self.status=='Tested' and self.print_on_submit==1:
+            if frappe.db.exists({'doctype': 'Queue','ctc_lab_test': self.name}):
+                que_doc=frappe.get_doc('Queue',{'ctc_lab_test':self.name})
+            else:
+                que_doc = frappe.get_doc({
+                    'doctype': 'Queue',
+                    'ctc_lab_test': self.name
+                })
+                que_doc.insert()
+                que_doc.submit()
+            que_doc.status='In Progress'
+            que_doc.submit()
+            que_doc.notify_update()
+        if self.status=='Submitted' and self.docstatus==1:
+            if frappe.db.exists({'doctype': 'Queue','ctc_lab_test': self.name}):
+                que_doc=frappe.get_doc('Queue',{'ctc_lab_test':self.name})
+                que_doc.status='Ready To Pick Up'
+                que_doc.submit()
+                que_doc.notify_update()
 
 @frappe.whitelist()
 def fetch_patient_status(doc):

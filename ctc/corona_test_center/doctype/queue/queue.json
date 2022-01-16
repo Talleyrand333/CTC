@@ -7,7 +7,6 @@
  "engine": "InnoDB",
  "field_order": [
   "ctc_lab_test",
-  "ctc_status",
   "status",
   "amended_from"
  ],
@@ -19,14 +18,6 @@
    "label": "CTC Lab Test",
    "options": "CTC Lab Test",
    "reqd": 1
-  },
-  {
-   "allow_on_submit": 1,
-   "fieldname": "ctc_status",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "CTC Status",
-   "read_only": 1
   },
   {
    "allow_on_submit": 1,
@@ -50,7 +41,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-01-16 08:01:41.317374",
+ "modified": "2022-01-16 16:46:43.819336",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "Queue",

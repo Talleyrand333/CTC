@@ -13,40 +13,6 @@ frappe.listview_settings['CTC Lab Test'] = {
 			return [__("Submitted"), "green", "status,=,Submitted"];
 		}
     },
-	button: {
-        show: function(doc) {
-            return true;
-        },
-        get_label: function() {
-            return __('Update Queue');
-        },
-        get_description: function(doc) {
-            return  ('Print {0}', [doc.name])
-        },
-        action: function(doc) {
-            let dt= doc.doctype
-            let dn= doc.name
-            frappe.call({
-				async:false,
-                method: 'ctc.app.test',
-                args: {
-                    name:doc.name
-                },
-                callback: (r) => {
-                    console.log(r);
-                    if(r.message==1){
-                        frappe.show_alert({
-                            message:__('Queue list has been updated.'),
-                            indicator:'green'
-                        }, 5);
-                    }
-                },
-                error: (r) => {
-                    // on error
-                }
-            })
-        }
-    }
 }
 
 // let old_quick_entry = frappe.ui.form.make_quick_entry;
