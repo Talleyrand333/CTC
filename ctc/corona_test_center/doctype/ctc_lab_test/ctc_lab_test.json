@@ -64,7 +64,6 @@
    "label": "Appointment"
   },
   {
-   "default": "Negative",
    "depends_on": "eval:doc.status==\"Tested\"",
    "description": "5=Pending,6=Negative,7=Postive,8=Invalid",
    "fieldname": "report_status",
@@ -286,7 +285,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-01-16 20:45:18.509121",
+ "modified": "2022-01-16 22:55:03.724056",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Lab Test",
