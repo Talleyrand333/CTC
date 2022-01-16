@@ -80,6 +80,24 @@ frappe.ui.form.on('CTC Lab Test', {
 				})
 
 			})
+			frm.add_custom_button(__("Download PDF"),()=>{
+				//download pdf
+				frappe.call({
+					method: 'ctc.corona_test_center.doctype.ctc_lab_test.ctc_lab_test.get_lab_test_pdf_link',
+					args:{
+						
+						'doctype':cur_frm.doc.doctype,
+						'doc':cur_frm.doc,
+						'name':cur_frm.doc.name,
+						
+					},
+					callback:function(message){
+						var url = message['message']
+						window.open(url,'_blank')
+						//window.location.href = message['message']
+					}
+				})
+			})
 		}
 		
 	},

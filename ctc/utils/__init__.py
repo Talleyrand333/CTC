@@ -6,6 +6,7 @@ import time
 import random
 from frappe.utils import get_files_path
 import datetime
+from six import string_types
 
 
 def generate_qr_code_and_attach(lab_test):
@@ -230,4 +231,31 @@ def generate_lab_code(docname):
     frappe.db.set_value('CTC Lab Test',docname,'label_path','/private/files/'+img_name)
     image_path = '/private/files/'+img_name
     frappe.db.commit()
-    return image_path
+    return 
+    
+
+@frappe.whitelist()
+def download_ctc_lab_test_pdf(doctype, name, format=None, doc=None, no_letterhead=0):
+    from frappe.utils.pdf import get_pdf
+
+    print_format = frappe.db.get_single_value("CTC Settings",'print_format_for_english_notification')
+    encrypt = frappe.db.get_single_value("CTC Settings",'encrypt_ctc_lab_test_attachment')
+    
+    if isinstance(doc,string_types):
+        doc = json.loads(doc)
+        doc= frappe.get_doc(doc)
+    if encrypt:
+        #get_criteria #date of birth is hardcoded
+        if isinstance(doc.date_of_birth,string_types):
+            password_list = doc.date_of_birth.split('-')
+            password = password_list[2] + password_list[1] + password_list[0]
+        else:
+            password = datetime.datetime.strftime(doc.date_of_birth,"%d%m%Y")
+    frappe.log_error(password)
+    html = frappe.get_print(doctype, name,doc=doc, no_letterhead=no_letterhead,password=password)
+    
+    frappe.local.response.filename = "{name}.pdf".format(name=name.replace(" ", "-").replace("/", "-"))
+    frappe.local.response.filecontent = get_pdf(html)
+    frappe.local.response.type = "pdf"
+
+    

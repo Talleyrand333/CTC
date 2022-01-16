@@ -15,6 +15,7 @@
   "negative_email_template",
   "negative_english_template",
   "print_format_for_english_notification",
+  "default_email_sender",
   "section_break_4",
   "positive_sms",
   "positive_english_sms",
@@ -170,12 +171,18 @@
    "fieldname": "encrypt_ctc_lab_test_attachment",
    "fieldtype": "Check",
    "label": "Encrypt CTC Lab Test Attachments"
+  },
+  {
+   "fieldname": "default_email_sender",
+   "fieldtype": "Link",
+   "label": "Default Email Sender",
+   "options": "Email Account"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-01-12 21:39:12.172053",
+ "modified": "2022-01-16 00:56:39.763987",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Settings",

@@ -230,12 +230,11 @@ def send_email_to_patient(doc):
     if isinstance(doc,string_types):
         doc = json.loads(doc)
         doc= frappe.get_doc(doc)
-    if doc.report_preference=="Email" and doc.report_status!='Faulty':
+    if doc.report_preference=="Email" or 'Print' and doc.report_status!='Faulty':
         template = frappe.get_doc("CTC Settings")
         password = None
         if template.encrypt_ctc_lab_test_attachment:
         #get_criteria #date of birth is hardcoded
-            print(type(doc.date_of_birth))
             if isinstance(doc.date_of_birth,string_types):
                 password_list = doc.date_of_birth.split('-')
                 password = password_list[2] + password_list[1] + password_list[0]
@@ -284,3 +283,17 @@ def send_email_to_patient(doc):
             reference_doctype=doc.doctype,
             reference_name=doc.name)
         return True
+
+
+
+
+
+@frappe.whitelist()
+def get_lab_test_pdf_link(doctype, doc, name, print_format='Standard', no_letterhead=0):
+	return '/api/method/ctc.utils.download_ctc_lab_test_pdf?doctype={doctype}&name={name}&doc={doc}&format={print_format}&no_letterhead={no_letterhead}'.format(
+		doctype = doctype,
+        doc = doc,
+        name = name,
+		print_format = print_format,
+		no_letterhead = no_letterhead
+	)
