@@ -2,6 +2,16 @@ import frappe
 import json
 
 @frappe.whitelist()
+def test(name):
+    doc=frappe.get_doc('Queue',name)
+    if doc.status=='Ready To Pick Up':
+        doc.status='Picked Up'
+        doc.submit()
+        doc.notify_update()
+        return 1
+    return 0
+
+@frappe.whitelist()
 def get_patient(**data):
     try:
         if not data.get('patient_name'):
