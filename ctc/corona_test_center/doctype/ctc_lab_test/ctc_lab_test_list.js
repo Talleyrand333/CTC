@@ -1,23 +1,24 @@
 frappe.listview_settings['CTC Lab Test'] = {
 	add_fields: ["status","patient" ],
-	get_indicator: function(doc) {
-		var colors = {
-            "Draft": "red",
-			"Tested": "blue",
-			"Submitted": "blue",
-            "Cancelled": "grey",
-			"In Progress": "yellow",
-			"Picked Up": "green",
-			"Ready To Pick Up": "orange",
-		};
-		return [__(doc.status), colors[doc.status], "status,=," + doc.status];
-	},
+    get_indicator: function (doc) {
+		if (doc.status === "Draft") {
+			// Active
+			return [__("Draft"), "gray", "status,=,Draft"];
+		} else if (doc.status === "Cancelled") {
+			// on hold
+			return [__("Cancelled"), "red", "status,=,Cancelled"];
+		} else if (doc.status === "On Hold") {
+			return [__("On Hold"), "orange", "status,=,On Hold"];
+		} else if (doc.status === "Submitted") {
+			return [__("Submitted"), "green", "status,=,Submitted"];
+		}
+    },
 	button: {
         show: function(doc) {
             return true;
         },
         get_label: function() {
-            return __('Change Status');
+            return __('Update Queue');
         },
         get_description: function(doc) {
             return  ('Print {0}', [doc.name])
@@ -32,6 +33,13 @@ frappe.listview_settings['CTC Lab Test'] = {
                     name:doc.name
                 },
                 callback: (r) => {
+                    console.log(r);
+                    if(r.message==1){
+                        frappe.show_alert({
+                            message:__('Queue list has been updated.'),
+                            indicator:'green'
+                        }, 5);
+                    }
                 },
                 error: (r) => {
                     // on error

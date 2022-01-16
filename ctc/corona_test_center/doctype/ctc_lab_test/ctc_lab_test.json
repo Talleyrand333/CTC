@@ -189,10 +189,9 @@
    "default": "Draft",
    "fieldname": "status",
    "fieldtype": "Select",
-   "in_list_view": 1,
    "label": "Status",
    "no_copy": 1,
-   "options": "Draft\nIn Progress\nTested\nPicked Up\nReady To Pick Up\nSubmitted\nCancelled",
+   "options": "\nDraft\nTested\nSubmitted\nCancelled",
    "read_only": 1
   },
   {
@@ -275,7 +274,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-01-15 23:37:02.349015",
+ "modified": "2022-01-16 09:01:35.205084",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Lab Test",
