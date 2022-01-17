@@ -138,6 +138,11 @@ class CTCLabTest(Document):
             frappe.db.commit()
 
     def on_submit(self):
+        if frappe.db.exists({'doctype': 'Queue','ctc_lab_test': self.name}):
+            que_doc=frappe.get_doc('Queue',{'ctc_lab_test':self.name})
+            que_doc.status='Ready To Pick Up'
+            que_doc.submit()
+            que_doc.notify_update()
         self.generate_qr_code()
         if not self.report_status:
             frappe.throw('You must set a report status before submitting')
