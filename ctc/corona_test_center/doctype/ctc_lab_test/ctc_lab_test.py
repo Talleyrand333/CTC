@@ -120,7 +120,7 @@ class CTCLabTest(Document):
         return(txn_)
 
     def validate(self):
-        create_queue(self)
+        #create_queue(self)
         api_args = self.fetch_api_arguments()
         #self.generate_base64(api_args)
         if self._action=='submit':
@@ -178,27 +178,26 @@ class CTCLabTest(Document):
         now=datetime.datetime.now(tz)
         self.test_time = datetime.datetime(now.year,now.month,now.day,now.hour,now.minute,now.second)
 
-def create_queue(self):
-        if self.status=='Tested' and self.print_on_submit==1:
-            if frappe.db.exists({'doctype': 'Queue','ctc_lab_test': self.name}):
-                que_doc=frappe.get_doc('Queue',{'ctc_lab_test':self.name})
-            else:
-                que_doc = frappe.get_doc({
-                    'doctype': 'Queue',
-                    'ctc_lab_test': self.name
-                })
-                que_doc.insert()
-                que_doc.submit()
-            que_doc.status='In Progress'
-            que_doc.submit()
-            que_doc.notify_update()
-        if self.status=='Submitted' and self.docstatus==1:
-            if frappe.db.exists({'doctype': 'Queue','ctc_lab_test': self.name}):
-                que_doc=frappe.get_doc('Queue',{'ctc_lab_test':self.name})
-                que_doc.status='Ready To Pick Up'
-                que_doc.submit()
-                que_doc.notify_update()
-
+#def create_queue(doc):
+#    if doc.status=='Tested' and doc.print_on_submit==1:
+#         if frappe.db.exists({'doctype': 'Queue','ctc_lab_test': doc.name}):
+#             que_doc=frappe.get_doc('Queue',{'ctc_lab_test':doc.name})
+#         else:
+#             que_doc = frappe.get_doc({
+#                  'doctype': 'Queue',
+#                  'ctc_lab_test': self.name
+#             })
+#             que_doc.insert()
+#         que_doc.status='In Progress'
+#         que_doc.submit()
+#         que_doc.notify_update()
+#    elif doc.status=='Submitted' and doc.docstatus==1:
+#         if frappe.db.exists({'doctype': 'Queue','ctc_lab_test': doc.name}):
+#             que_doc=frappe.get_doc('Queue',{'ctc_lab_test':doc.name})
+#             que_doc.status='Ready To Pick Up'
+#             que_doc.submit()
+#             que_doc.notify_update()
+#
 @frappe.whitelist()
 def fetch_patient_status(doc):
     import datetime
@@ -255,6 +254,12 @@ def send_email_to_patient(doc):
     if doc.report_preference=="Email" or 'Print' and doc.report_status!='Faulty':
         template = frappe.get_doc("CTC Settings")
         password = None
+        
+        if template.default_email_sender:
+            sender = frappe.db.get_value('Email Account',template.default_email_sender,'email_id')
+        else:
+            sender = frappe.db.get_value('Email Account',{'default_incoming':1},'email_id')
+        
         if template.encrypt_ctc_lab_test_attachment:
         #get_criteria #date of birth is hardcoded
             if isinstance(doc.date_of_birth,string_types):
@@ -290,7 +295,9 @@ def send_email_to_patient(doc):
         subject=email_args['subject'],
         attachments=email_args['attachments'],
         reference_doctype=doc.doctype,
-        reference_name=doc.name)
+        reference_name=doc.name,
+        sender=sender)
+        frappe.clear_messages()
         if negative2 and positive2:
             message2=  positive2 if doc.report_status =="Positive" else negative2
             email_args['attachments2'] = [frappe.attach_print('CTC Lab Test',doc.name,file_name=doc.name,print_format=template.print_format_for_english_notification,password=password)]
@@ -303,7 +310,9 @@ def send_email_to_patient(doc):
             subject=email_args['eng_sub'],
             attachments=email_args['attachments2'],
             reference_doctype=doc.doctype,
-            reference_name=doc.name)
+            reference_name=doc.name,
+            sender=sender)
+            frappe.clear_messages()
         return True
 
 

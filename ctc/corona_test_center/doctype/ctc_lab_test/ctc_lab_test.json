@@ -60,10 +60,10 @@
   {
    "fieldname": "appointment",
    "fieldtype": "Datetime",
+   "hidden": 1,
    "label": "Appointment"
   },
   {
-   "default": "Negative",
    "depends_on": "eval:doc.status==\"Tested\"",
    "description": "5=Pending,6=Negative,7=Postive,8=Invalid",
    "fieldname": "report_status",
@@ -205,6 +205,7 @@
   {
    "fieldname": "subscription",
    "fieldtype": "Select",
+   "hidden": 1,
    "label": "Subscription Status",
    "options": "\nActive\nInactive",
    "read_only": 1
@@ -276,6 +277,7 @@
    "description": "Email Account to use as sender",
    "fieldname": "email_sender",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Email Sender",
    "options": "Email Account"
   }
@@ -283,8 +285,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-01-16 01:03:09.100214",
-
+ "modified": "2022-01-16 22:55:03.724056",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Lab Test",
