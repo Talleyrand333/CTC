@@ -7,6 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "ctc_lab_test",
+  "print_on_submit",
   "status",
   "amended_from"
  ],
@@ -36,12 +37,20 @@
    "options": "Queue",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "print_on_submit",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Print on Submit",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-01-16 16:46:43.819336",
+ "modified": "2022-01-17 09:09:41.946820",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "Queue",
