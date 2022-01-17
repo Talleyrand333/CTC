@@ -12,6 +12,32 @@ def test(name):
     return 0
 
 @frappe.whitelist()
+def create_queue(ctc_doc):
+    ctc_lab_doc=json.loads(ctc_doc)
+    if ctc_lab_doc['status']=='Tested' and ctc_lab_doc['print_on_submit']==1:
+        if frappe.db.exists({'doctype': 'Queue','ctc_lab_test': ctc_lab_doc['name']}):
+            que_doc=frappe.get_doc('Queue',{'ctc_lab_test':ctc_lab_doc['name']})
+        else:
+            que_doc = frappe.get_doc({
+                 'doctype': 'Queue',
+                 'ctc_lab_test': ctc_lab_doc['name']
+            })
+            que_doc.insert()
+        que_doc.status='In Progress'
+        que_doc.submit()
+        que_doc.notify_update()
+
+@frappe.whitelist()
+def update_queue(ctc_doc):
+    ctc_lab_doc=json.loads(ctc_doc)
+    if ctc_lab_doc['status']=='Submitted':
+        if frappe.db.exists({'doctype': 'Queue','ctc_lab_test': ctc_lab_doc['name']}):
+            que_doc=frappe.get_doc('Queue',{'ctc_lab_test':ctc_lab_doc['name']})
+            que_doc.status='Ready To Pick Up'
+            que_doc.submit()
+            que_doc.notify_update()
+
+@frappe.whitelist()
 def get_patient(**data):
     try:
         if not data.get('patient_name'):
