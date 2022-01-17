@@ -16,6 +16,7 @@
   "negative_english_template",
   "print_format_for_english_notification",
   "default_email_sender",
+  "email_id",
   "section_break_4",
   "positive_sms",
   "positive_english_sms",
@@ -177,12 +178,18 @@
    "fieldtype": "Link",
    "label": "Default Email Sender",
    "options": "Email Account"
+  },
+  {
+   "fieldname": "email_id",
+   "fieldtype": "Data",
+   "label": "Email ID",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-01-16 00:56:39.763987",
+ "modified": "2022-01-17 14:09:01.609965",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Settings",

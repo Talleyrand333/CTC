@@ -26,3 +26,10 @@ class CTCSettings(Document):
 			frappe.db.sql("INSERT INTO `tabSeries` (`name`, `current`) VALUES (%s, %s)", (abbr,series_no))
 		
 		frappe.db.commit()
+	
+	@frappe.whitelist()
+	def get_email_id(self,sender):
+		if not sender:return
+		email_id = frappe.db.get_value('Email Account',sender,'email_id')
+		if email_id:
+			return email_id
