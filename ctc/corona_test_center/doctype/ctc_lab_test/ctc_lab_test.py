@@ -178,26 +178,27 @@ class CTCLabTest(Document):
         now=datetime.datetime.now(tz)
         self.test_time = datetime.datetime(now.year,now.month,now.day,now.hour,now.minute,now.second)
 
+
 #def create_queue(doc):
 #    if doc.status=='Tested' and doc.print_on_submit==1:
-#         if frappe.db.exists({'doctype': 'Queue','ctc_lab_test': doc.name}):
-#             que_doc=frappe.get_doc('Queue',{'ctc_lab_test':doc.name})
-#         else:
-#             que_doc = frappe.get_doc({
-#                  'doctype': 'Queue',
-#                  'ctc_lab_test': self.name
-#             })
-#             que_doc.insert()
-#         que_doc.status='In Progress'
-#         que_doc.submit()
-#         que_doc.notify_update()
+#        if frappe.db.exists({'doctype': 'Queue','ctc_lab_test': doc.name}):
+#            que_doc=frappe.get_doc('Queue',{'ctc_lab_test':doc.name})
+#        else:
+#            que_doc = frappe.get_doc({
+#                'doctype': 'Queue',
+#                'ctc_lab_test': doc.name
+#            })
+#            que_doc.insert()
+#        que_doc.status='In Progress'
+#        que_doc.submit()
+#        que_doc.notify_update()
 #    elif doc.status=='Submitted' and doc.docstatus==1:
-#         if frappe.db.exists({'doctype': 'Queue','ctc_lab_test': doc.name}):
-#             que_doc=frappe.get_doc('Queue',{'ctc_lab_test':doc.name})
-#             que_doc.status='Ready To Pick Up'
-#             que_doc.submit()
-#             que_doc.notify_update()
-#
+#        if frappe.db.exists({'doctype': 'Queue','ctc_lab_test': doc.name}):
+#            que_doc=frappe.get_doc('Queue',{'ctc_lab_test':doc.name})
+#            que_doc.status='Ready To Pick Up'
+#            que_doc.submit()
+#            que_doc.notify_update()
+
 @frappe.whitelist()
 def fetch_patient_status(doc):
     import datetime

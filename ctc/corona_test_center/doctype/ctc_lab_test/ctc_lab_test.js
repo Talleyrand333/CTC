@@ -111,6 +111,7 @@ frappe.ui.form.on('CTC Lab Test', {
 		}
 	},
 	before_save:function(frm){
+		console.log('working')
 		frappe.call({
 			method: 'ctc.app.create_queue',
 			args: {
@@ -120,7 +121,8 @@ frappe.ui.form.on('CTC Lab Test', {
 			}
 		});
 	},
-	on_submit:function(frm){
+	before_submit:function(frm){
+		console.log('working')
 		frappe.call({
 			method: 'ctc.app.update_queue',
 			args: {
