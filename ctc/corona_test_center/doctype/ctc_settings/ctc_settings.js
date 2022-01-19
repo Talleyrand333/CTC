@@ -15,7 +15,6 @@ frappe.ui.form.on('CTC Settings', {
 			},
 			callback:function(message){
 				if (message){
-					console.log(message)
 					cur_frm.set_value('email_id',message['message'])
 					cur_frm.refresh_field('email_id')
 					cur_frm.refresh_fields()

@@ -91,7 +91,7 @@ class CTCLabTest(Document):
         
         
     def generate_lab_test_code(self):
-        
+        if self.label_path:return
         from ctc.utils import generate_lab_code
         generate = frappe.db.get_single_value('CTC Settings','generate_print_label')
         id_number = frappe.db.get_value('CTC Patient',self.patient,'id_number')
@@ -129,8 +129,12 @@ class CTCLabTest(Document):
         if self.status =='Tested':
             self.generate_lab_test_code()
             #send label to printer
+            #check if print_jo exists for lab test
+            if frappe.db.exists('Print Node Job',{'ref_type':self.doctype,'ref_name':self.name}):
+                return
             from printnode_integration.events import print_via_printnode
             print_via_printnode(self.doctype,self.name,'Tested')
+        
         if self.has_value_changed('status') and self.status != 'Submitted':
             #update the test date
             test_time = frappe.utils.get_datetime_str(frappe.utils.get_datetime())
