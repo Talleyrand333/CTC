@@ -64,12 +64,10 @@
    "label": "Appointment"
   },
   {
-   "depends_on": "eval:doc.status==\"Tested\"",
    "description": "5=Pending,6=Negative,7=Postive,8=Invalid",
    "fieldname": "report_status",
    "fieldtype": "Select",
    "label": "Report Status",
-   "mandatory_depends_on": "eval:doc.status=='Tested'",
    "options": "\nNegative\nPositive\nInvalid\nPending\nFaulty"
   },
   {
@@ -92,7 +90,6 @@
    "reqd": 1
   },
   {
-   "default": "now",
    "fieldname": "test_time",
    "fieldtype": "Datetime",
    "label": "Test Date"
@@ -270,8 +267,7 @@
   {
    "fieldname": "label_path",
    "fieldtype": "Data",
-   "label": "Label Path",
-   "read_only": 1
+   "label": "Label Path"
   },
   {
    "description": "Email Account to use as sender",
@@ -285,7 +281,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-01-16 22:55:03.724056",
+ "modified": "2022-01-29 00:06:52.150517",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Lab Test",

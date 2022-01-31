@@ -88,8 +88,7 @@ class CTCLabTest(Document):
         self.name = (abbr + '.' +'####')
         self.name = make_autoname(abbr + '.####','',self)
        
-        
-        
+    
     def generate_lab_test_code(self):
         if self.label_path:return
         from ctc.utils import generate_lab_code
@@ -103,6 +102,7 @@ class CTCLabTest(Document):
             
             label_path = generate_lab_code(self.name)
             self.label_path = label_path
+            
   
     def generate_code(self,l=None,is_hex=True):
         return
@@ -126,20 +126,29 @@ class CTCLabTest(Document):
         if self._action=='submit':
             send_email_to_patient(self)
             send_sms_to_patient(self)
+        
         if self.status =='Tested':
             self.generate_lab_test_code()
             #send label to printer
-            #check if print_jo exists for lab test
-            if frappe.db.exists('Print Node Job',{'ref_type':self.doctype,'ref_name':self.name}):
-                return
-            from printnode_integration.events import print_via_printnode
-            print_via_printnode(self.doctype,self.name,'Tested')
+            #check if print_job exists for lab test
+            if not frappe.db.exists('Print Node Job',{'ref_type':self.doctype,'ref_name':self.name,'print_on':'Tested'}):
+                from printnode_integration.events import print_via_printnode
+                print_via_printnode(self.doctype,self.name,'Tested')
         
-        if self.has_value_changed('status') and self.status != 'Submitted':
-            #update the test date
-            test_time = frappe.utils.get_datetime_str(frappe.utils.get_datetime())
-            self.test_time = test_time
-            frappe.db.commit()
+        # if self.has_value_changed('status') and self.status == 'Tested':
+        #     #update the test date
+        #     test_time = frappe.utils.get_datetime_str(frappe.utils.get_datetime())
+        #     frappe.db.set_value(self.doctype,self.name,'test_time',test_time)
+        #     frappe.db.commit()
+        #     self.test_time = test_time
+            
+
+            ##send to pos printer if report status is Print and docevent is Tested
+            if not frappe.db.exists('Print Node Job',{'ref_type':self.doctype,'ref_name':self.name,'print_on':'POS'}) and self.print_on_submit:
+                from printnode_integration.events import print_via_printnode
+                print_via_printnode(self.doctype,self.name,'POS')
+            
+            
 
     def on_submit(self):
         if frappe.db.exists({'doctype': 'Queue','ctc_lab_test': self.name}):
@@ -150,7 +159,9 @@ class CTCLabTest(Document):
         self.generate_qr_code()
         if not self.report_status:
             frappe.throw('You must set a report status before submitting')
+
         
+
 
     def generate_qr_code(self):
         if self.send_to_cwa and not self.lab_test_hash:

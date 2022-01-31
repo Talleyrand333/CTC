@@ -8,6 +8,13 @@ from frappe.utils import get_files_path
 import datetime
 from six import string_types
 
+#############################
+from distutils.version import LooseVersion
+import pdfkit
+import six
+import io
+from frappe import _
+from PyPDF2 import PdfFileReader, PdfFileWriter
 
 def generate_qr_code_and_attach(lab_test):
     #generate qr_code and attach to linked labtest
@@ -212,35 +219,36 @@ def send_request_to_server(lab_test):
 def generate_lab_code(docname):
     
    
-    img = qrcode.make(docname,border=0.6,box_size=100)
+    img = qrcode.make(docname,border=0.8,box_size=100)
 
     img_name = docname + "-" +".png"
-    save_path = frappe.get_site_path() +"/"+'private/files/'+ img_name
+    save_path = frappe.get_site_path() +'/public/files/'+ img_name
     img.save(save_path,format="PNG")
     _file = frappe.get_doc({
             "doctype": "File",
             "file_name":img_name,
             "attached_to_doctype": 'CTC Lab Test',
             "attached_to_name": docname,
-            'file_url':'/private/files/'+img_name,
+            'file_url':'/files/' + img_name,
         })
     _file.flags.ignore_duplicate_entry_error=1
     _file.save(ignore_permissions=True)
 
     #set label path
-    frappe.db.set_value('CTC Lab Test',docname,'label_path','/private/files/'+img_name)
-    image_path = '/private/files/'+img_name
+    frappe.db.set_value('CTC Lab Test',docname,'label_path','/files/'+img_name)
+    image_path = '/files/'+img_name
     frappe.db.commit()
-    return 
+    return image_path
     
 
 @frappe.whitelist()
 def download_ctc_lab_test_pdf(doctype, name, format=None, doc=None, no_letterhead=0):
     from frappe.utils.pdf import get_pdf
+    from frappe.utils.jinja import render_template
 
     print_format = frappe.db.get_single_value("CTC Settings",'print_format_for_english_notification')
     encrypt = frappe.db.get_single_value("CTC Settings",'encrypt_ctc_lab_test_attachment')
-    
+    password = None
     if isinstance(doc,string_types):
         doc = json.loads(doc)
         doc= frappe.get_doc(doc)
@@ -251,11 +259,112 @@ def download_ctc_lab_test_pdf(doctype, name, format=None, doc=None, no_letterhea
             password = password_list[2] + password_list[1] + password_list[0]
         else:
             password = datetime.datetime.strftime(doc.date_of_birth,"%d%m%Y")
-    frappe.log_error(password)
     html = frappe.get_print(doctype, name,doc=doc, no_letterhead=no_letterhead,password=password)
-    
+    #html = frappe.db.get_value('Print Format','CTC Label Print Main','html')
+    #html = render_template(html,{'doc':doc})
     frappe.local.response.filename = "{name}.pdf".format(name=name.replace(" ", "-").replace("/", "-"))
     frappe.local.response.filecontent = get_pdf(html)
     frappe.local.response.type = "pdf"
 
+
+
+
+
+def get_pdf_mod(html, options=None, output=None):
+    from frappe.utils import scrub_urls
+
+    html = scrub_urls(html)    
+
+    PDF_CONTENT_ERRORS = ["ContentNotFoundError", "ContentOperationNotPermittedError",
+    "UnknownContentError", "RemoteHostClosedError"]
+    filedata = ''
+	
+    options = get_options(output=output)
+    try:
+        # Set filename property to false, so no file is actually created
+        filedata = pdfkit.from_string(html, False,options=options)
+
+        # https://pythonhosted.org/PyPDF2/PdfFileReader.html
+        # create in-memory binary streams from filedata and create a PdfFileReader object
+        reader = PdfFileReader(io.BytesIO(filedata))
+    except OSError as e:
+        if any([error in str(e) for error in PDF_CONTENT_ERRORS]):
+            if not filedata:
+                frappe.throw(_("PDF generation failed because of broken image links"))
+
+            # allow pdfs with missing images if file got created
+            if output:  # output is a PdfFileWriter object
+                output.appendPagesFromReader(reader)
+        else:
+            raise
+    finally:
+        pass
+
+    if "password" in options:
+        password = options["password"]
+        if six.PY2:
+            password = frappe.safe_encode(password)
+
+   
+
+    writer = PdfFileWriter()
+    writer.appendPagesFromReader(reader)
+
+    if "password" in options:
+        writer.encrypt(password)
+
+    filedata = get_file_data_from_writer(writer)
+
+    return filedata
+
+def get_options(output=None):
+    options = {
+        'margin-top': '0in',
+        'margin-right': '0in',
+        'margin-bottom': '0in',
+        'margin-left': '0in',
+        # "disable-local-file-access": ""
+    }
+
+    pdf_page_size = (
+		options.get("page-size")
+		or frappe.db.get_single_value("Print Settings", "pdf_page_size")
+		or "A4"
+	)
+
+    if output:
+        options["page-height"] = output.get("page-height") or frappe.db.get_single_value(
+        "Print Settings", "pdf_page_height"
+        )
+        options["page-width"] = output.get("page-width") or frappe.db.get_single_value(
+        "Print Settings", "pdf_page_width"
+        )
+    else:
+        options["page-size"] = pdf_page_size
     
+    if output.get('page_layout'):
+        output['layout'] = output.get('page_layout')
+    options.update({
+        'print-media-type': None,
+        'background': None,
+        'images': None,
+        'quiet': None,
+        
+        'encoding': "UTF-8",
+        
+    })
+    return options
+
+
+
+def get_file_data_from_writer(writer_obj):
+
+    # https://docs.python.org/3/library/io.html
+    stream = io.BytesIO()
+    writer_obj.write(stream)
+
+    # Change the stream position to start of the stream
+    stream.seek(0)
+
+    # Read up to size bytes from the object and return them
+    return stream.read()

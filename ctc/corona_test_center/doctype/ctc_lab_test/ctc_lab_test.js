@@ -94,7 +94,7 @@ frappe.ui.form.on('CTC Lab Test', {
 					callback:function(message){
 						var url = message['message']
 						download_file(url,'kask.pdf')
-						//window.location.href = message['message']
+						//window.open(url,'_blank')
 					}
 				})
 			})
@@ -111,24 +111,38 @@ frappe.ui.form.on('CTC Lab Test', {
 		}
 	},
 	before_save:function(frm){
-		console.log('working')
 		frappe.call({
 			method: 'ctc.app.create_queue',
 			args: {
 				'ctc_doc':cur_frm.doc
 			},
 			callback: function (r) {
+				cur_frm.refresh_fields()
 			}
 		});
+		// if(frm.doc.workflow_state=='Tested'){
+		// 	//set test_time
+		// 	console.log('hello')
+		// 	cur_frm.set_value('test_time',frappe.datetime.get_datetime_as_string())
+		// 	cur_frm.refresh_field('test_time')
+		// }
+		
 	},
+	
 
-	// after_workflow_action:function(frm){
-	// 	if (frm.doc.workflow_state = 'Submitted'){
-	// 		//cur_frm.doc.workflow_state = 'Submitted'
-	// 		setTimeout(function(){cur_frm.print_doc() }, 2500);
-
-	// 	}
-	// }
+	after_workflow_action:function(frm){
+		// if (frm.doc.workflow_state = 'Submitted'){
+		// 	//cur_frm.doc.workflow_state = 'Submitted'
+		// 	setTimeout(function(){cur_frm.print_doc() }, 2500);
+		if(frm.doc.workflow_state =='Tested'){
+			//set test_time
+			cur_frm.set_value('test_time',frappe.datetime.get_datetime_as_string())
+			cur_frm.refresh_field('test_time')
+			cur_frm.save()
+			cur_frm.refresh_fields()
+		
+		}
+	}
 	
 });
 
