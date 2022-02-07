@@ -243,30 +243,38 @@ def generate_lab_code(docname):
 
 @frappe.whitelist()
 def download_ctc_lab_test_pdf(doctype, name, format=None, doc=None, no_letterhead=0):
-    from frappe.utils.pdf import get_pdf
-    from frappe.utils.jinja import render_template
+    try:
 
-    print_format = frappe.db.get_single_value("CTC Settings",'print_format_for_english_notification')
-    encrypt = frappe.db.get_single_value("CTC Settings",'encrypt_ctc_lab_test_attachment')
-    password = None
-    if isinstance(doc,string_types):
-        doc = json.loads(doc)
-        doc= frappe.get_doc(doc)
-    if encrypt:
-        #get_criteria #date of birth is hardcoded
-        if isinstance(doc.date_of_birth,string_types):
-            password_list = doc.date_of_birth.split('-')
-            password = password_list[2] + password_list[1] + password_list[0]
-        else:
-            password = datetime.datetime.strftime(doc.date_of_birth,"%d%m%Y")
-    html = frappe.get_print(doctype, name,doc=doc, no_letterhead=no_letterhead,password=password)
-    #html = frappe.db.get_value('Print Format','CTC Label Print Main','html')
-    #html = render_template(html,{'doc':doc})
-    frappe.local.response.filename = "{name}.pdf".format(name=name.replace(" ", "-").replace("/", "-"))
-    frappe.local.response.filecontent = get_pdf(html)
-    frappe.local.response.type = "pdf"
+        from frappe.utils.pdf import get_pdf
+        from frappe.utils.jinja import render_template
 
+        print_format = frappe.db.get_single_value("CTC Settings",'print_format_for_english_notification')
+        encrypt = frappe.db.get_single_value("CTC Settings",'encrypt_ctc_lab_test_attachment')
+        password = None
+        if isinstance(doc,string_types):
+            doc = json.loads(doc)
+            doc= frappe.get_doc(doc)
+        if encrypt:
+            #get_criteria #date of birth is hardcoded
+            if isinstance(doc.date_of_birth,string_types):
+                password_list = doc.date_of_birth.split('-')
+                password = password_list[2] + password_list[1] + password_list[0]
+            else:
+                password = datetime.datetime.strftime(doc.date_of_birth,"%d%m%Y")
+        html = frappe.get_print(doctype, name,doc=doc, no_letterhead=no_letterhead,password=password)
+        # html = frappe.db.get_value('Print Format','CTC Label Print Main','html')
+        # html = render_template(html,{'doc':doc})
+        # import os
+        # from stat import S_IREAD, S_IRGRP, S_IROTH
+        
+        frappe.local.response.filename = "{name}.pdf".format(name=name.replace(" ", "-").replace("/", "-"))
+        
+        # os.chmod(frappe.local.response.filename, S_IREAD|S_IRGRP|S_IROTH)
+        frappe.local.response.filecontent = get_pdf_mod(html,output={})
+        frappe.local.response.type = "pdf"
 
+    except:
+        frappe.log_error(frappe.get_traceback())
 
 
 
@@ -351,6 +359,7 @@ def get_options(output=None):
         'quiet': None,
         
         'encoding': "UTF-8",
+        
         
     })
     return options
