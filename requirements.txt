@@ -4,3 +4,5 @@ qrcode
 printnodeapi
 constants
 python-docx
+pdf2image
+img2pdf

@@ -269,6 +269,7 @@ def send_sms_to_patient(doc):
 
 @frappe.whitelist()
 def send_email_to_patient(doc):
+    from ctc.utils import get_pdf_mod_for_download
     if isinstance(doc,string_types):
         doc = json.loads(doc)
         doc= frappe.get_doc(doc)
@@ -301,11 +302,18 @@ def send_email_to_patient(doc):
         data['formated_date']=formated_date
         message = positive if doc.report_status =="Positive" else negative
 
+        pdf_html = frappe.get_print(doc.doctype, doc.name,doc=doc,password=password)
+        pdf_data = get_pdf_mod_for_download(pdf_html,doc=doc,output={}) 
+
+        out = {
+            "fname": doc.name + ".pdf",
+            "fcontent": pdf_data
+	    }
         email_args = {
                 "recipients": [doc.email],
                 "message": frappe.render_template(message.response,data),
                 "subject": message.subject,
-                "attachments": [frappe.attach_print("CTC Lab Test", doc.name,password=password)],
+                "attachments": [out],
                 "reference_doctype": doc.doctype,
                 "reference_name": doc.name
                 
@@ -319,9 +327,18 @@ def send_email_to_patient(doc):
         reference_name=doc.name,
         sender=sender)
         frappe.clear_messages()
+
+        pdf_html = frappe.get_print(doc.doctype, doc.name,doc=doc,password=password,print_format=template.print_format_for_english_notification)
+        pdf_data =  get_pdf_mod_for_download(pdf_html,doc=doc,output={}) 
+        
+        out = {
+            "fname": doc.name + ".pdf",
+            "fcontent": pdf_data
+	    }
+        
         if negative2 and positive2:
             message2=  positive2 if doc.report_status =="Positive" else negative2
-            email_args['attachments2'] = [frappe.attach_print('CTC Lab Test',doc.name,file_name=doc.name,print_format=template.print_format_for_english_notification,password=password)]
+            email_args['attachments2'] = [out]
             email_args['eng_msg'] = frappe.render_template(message2.response,data)
             email_args['eng_sub'] = message2.subject
             

@@ -93,8 +93,8 @@ frappe.ui.form.on('CTC Lab Test', {
 					},
 					callback:function(message){
 						var url = message['message']
-						download_file(url,'kask.pdf')
-						//window.open(url,'_blank')
+						//download_file(url,'kask.pdf')
+						window.open(url,'_blank')
 					}
 				})
 			})

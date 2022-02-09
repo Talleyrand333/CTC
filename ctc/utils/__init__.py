@@ -262,15 +262,15 @@ def download_ctc_lab_test_pdf(doctype, name, format=None, doc=None, no_letterhea
             else:
                 password = datetime.datetime.strftime(doc.date_of_birth,"%d%m%Y")
         html = frappe.get_print(doctype, name,doc=doc, no_letterhead=no_letterhead,password=password)
-        # html = frappe.db.get_value('Print Format','CTC Label Print Main','html')
-        # html = render_template(html,{'doc':doc})
+        #html = frappe.db.get_value('Print Format','CTC Label Print Main','html')
+        #html = render_template(html,{'doc':doc})
         # import os
         # from stat import S_IREAD, S_IRGRP, S_IROTH
         
         frappe.local.response.filename = "{name}.pdf".format(name=name.replace(" ", "-").replace("/", "-"))
         
         # os.chmod(frappe.local.response.filename, S_IREAD|S_IRGRP|S_IROTH)
-        frappe.local.response.filecontent = get_pdf_mod(html,output={})
+        frappe.local.response.filecontent = get_pdf_mod_for_download(html,doc=doc,output={})
         frappe.local.response.type = "pdf"
 
     except:
@@ -377,3 +377,84 @@ def get_file_data_from_writer(writer_obj):
 
     # Read up to size bytes from the object and return them
     return stream.read()
+
+
+def get_pdf_mod_for_download(html,doc=None, options=None, output=None):
+    from frappe.utils import scrub_urls
+    from pdf2image import convert_from_path
+    import img2pdf
+
+    html = scrub_urls(html)    
+
+    PDF_CONTENT_ERRORS = ["ContentNotFoundError", "ContentOperationNotPermittedError",
+    "UnknownContentError", "RemoteHostClosedError"]
+    filedata = ''
+	
+    options = get_options(output=output)
+    #margin have to be updated to use appear like normal pdf
+
+    options.update({
+        'margin-top': '15mm',
+        'margin-right': '15mm',
+        'margin-bottom': '15mm',
+        'margin-left': '15mm',
+        # "disable-local-file-access": ""
+    })
+    try:
+        # Set filename property to false, so no file is actually created
+        filedata = pdfkit.from_string(html, 'initial.pdf',options=options)
+
+        
+        
+        
+        # Store Pdf with convert_from_path function
+        images = convert_from_path('initial.pdf')
+        image_names = []  
+        for i in range(len(images)):
+        
+            # Save pages as images in the pdf
+            images[i].save('page'+ str(i) + '-' + doc.name +'.jpg', 'JPEG')
+            image_names.append('page'+ str(i) + '-' + doc.name +'.jpg')
+        # https://pythonhosted.org/PyPDF2/PdfFileReader.html
+        # create in-memory binary streams from filedata and create a PdfFileReader object
+        filename = doc.name +".pdf"
+        with open(filename,"wb") as f:
+            f.write(img2pdf.convert(image_names))
+
+        #get filedata from reader
+        reader = PdfFileReader(open(filename, 'rb'))
+         
+    except OSError as e:
+        if any([error in str(e) for error in PDF_CONTENT_ERRORS]):
+            if not filedata:
+                frappe.throw(_("PDF generation failed because of broken image links"))
+
+            # allow pdfs with missing images if file got created
+            if output:  # output is a PdfFileWriter object
+                output.appendPagesFromReader(reader)
+        else:
+            raise
+    finally:
+        pass
+
+    if "password" in options:
+        password = options["password"]
+        if six.PY2:
+            password = frappe.safe_encode(password)
+
+   
+
+    writer = PdfFileWriter()
+    writer.appendPagesFromReader(reader)
+
+    if "password" in options:
+        writer.encrypt(password)
+
+    filedata = get_file_data_from_writer(writer)
+    #delete initial pdf files and image files to save space
+    if os.path.exists(filename):
+        os.remove(filename)
+    if image_names:
+        for i in image_names:
+            os.remove(i)
+    return filedata
