@@ -439,18 +439,18 @@ def get_pdf_mod_for_download(html,doc=None, options=None, output=None):
     finally:
         pass
 
-    if "password" in options:
-        password = options["password"]
-        if six.PY2:
-            password = frappe.safe_encode(password)
-
-   
-
     writer = PdfFileWriter()
     writer.appendPagesFromReader(reader)
-
-    if "password" in options:
+    if output.get('password'):
+        password = output.get('password')
+        if six.PY2:
+            password = frappe.safe_encode(password)
         writer.encrypt(password)
+
+
+   
+    
+    
 
     filedata = get_file_data_from_writer(writer)
     #delete initial pdf files and image files to save space

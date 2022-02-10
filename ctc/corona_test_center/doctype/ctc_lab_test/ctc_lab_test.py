@@ -303,7 +303,7 @@ def send_email_to_patient(doc):
         message = positive if doc.report_status =="Positive" else negative
 
         pdf_html = frappe.get_print(doc.doctype, doc.name,doc=doc,password=password)
-        pdf_data = get_pdf_mod_for_download(pdf_html,doc=doc,output={}) 
+        pdf_data = get_pdf_mod_for_download(pdf_html,doc=doc,output={'password':password}) 
 
         out = {
             "fname": doc.name + ".pdf",
@@ -329,7 +329,7 @@ def send_email_to_patient(doc):
         frappe.clear_messages()
 
         pdf_html = frappe.get_print(doc.doctype, doc.name,doc=doc,password=password,print_format=template.print_format_for_english_notification)
-        pdf_data =  get_pdf_mod_for_download(pdf_html,doc=doc,output={}) 
+        pdf_data =  get_pdf_mod_for_download(pdf_html,doc=doc,output={'password':password}) 
         
         out = {
             "fname": doc.name + ".pdf",
