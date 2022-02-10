@@ -408,7 +408,7 @@ def get_pdf_mod_for_download(html,doc=None, options=None, output=None):
         
         
         # Store Pdf with convert_from_path function
-        images = convert_from_path('initial.pdf')
+        images = convert_from_path('initial.pdf',250)
         image_names = []  
         for i in range(len(images)):
         
@@ -418,8 +418,10 @@ def get_pdf_mod_for_download(html,doc=None, options=None, output=None):
         # https://pythonhosted.org/PyPDF2/PdfFileReader.html
         # create in-memory binary streams from filedata and create a PdfFileReader object
         filename = doc.name +".pdf"
+        a4inpt = (img2pdf.mm_to_pt(210),img2pdf.mm_to_pt(297))
+        layout_fun = img2pdf.get_layout_fun(a4inpt)
         with open(filename,"wb") as f:
-            f.write(img2pdf.convert(image_names))
+            f.write(img2pdf.convert(image_names,layout_fun=layout_fun))
 
         #get filedata from reader
         reader = PdfFileReader(open(filename, 'rb'))
