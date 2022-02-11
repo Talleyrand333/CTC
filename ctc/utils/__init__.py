@@ -340,7 +340,7 @@ def get_options(output=None):
 		or "A4"
 	)
 
-    if output:
+    if output.get('page-height') or output.get('page-width'):
         options["page-height"] = output.get("page-height") or frappe.db.get_single_value(
         "Print Settings", "pdf_page_height"
         )
