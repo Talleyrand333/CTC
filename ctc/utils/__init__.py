@@ -7,6 +7,9 @@ import random
 from frappe.utils import get_files_path
 import datetime
 from six import string_types
+from frappe.utils import scrub_urls
+from pdf2image import convert_from_path
+import img2pdf
 
 #############################
 from distutils.version import LooseVersion
@@ -380,9 +383,7 @@ def get_file_data_from_writer(writer_obj):
 
 
 def get_pdf_mod_for_download(html,doc=None, options=None, output=None):
-    from frappe.utils import scrub_urls
-    from pdf2image import convert_from_path
-    import img2pdf
+    
 
     html = scrub_urls(html)    
 

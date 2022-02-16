@@ -123,9 +123,7 @@ class CTCLabTest(Document):
         #create_queue(self)
         api_args = self.fetch_api_arguments()
         #self.generate_base64(api_args)
-        if self._action=='submit':
-            send_email_to_patient(self)
-            send_sms_to_patient(self)
+       
         
         if self.status =='Tested':
             self.generate_lab_test_code()
@@ -161,7 +159,10 @@ class CTCLabTest(Document):
             frappe.throw('You must set a report status before submitting')
 
         
-
+    def on_submit(self):
+        frappe.enqueue(method='ctc.corona_test_center.doctype.ctc_lab_test.ctc_lab_test.send_communication',queue='short',doc=self)
+        # send_email_to_patient(self)
+        # send_sms_to_patient(self)
 
     def generate_qr_code(self):
         if self.send_to_cwa and not self.lab_test_hash:
@@ -218,6 +219,10 @@ class CTCLabTest(Document):
 #            que_doc.status='Ready To Pick Up'
 #            que_doc.submit()
 #            que_doc.notify_update()
+
+def send_communication(doc):
+    send_email_to_patient(doc)
+    send_sms_to_patient(doc)
 
 @frappe.whitelist()
 def fetch_patient_status(doc):
