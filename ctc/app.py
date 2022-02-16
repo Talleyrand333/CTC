@@ -81,7 +81,7 @@ def get_patients(**data):
 
     try:
       
-        patients = frappe.get_all('CTC Patient', ['name'])
+        patients = frappe.get_all('CTC Patient', ['name','date_of_birth'])
         
         frappe.local.response['message'] = 'Patients Retrieved'
         frappe.local.response['http_status_code'] = 200
