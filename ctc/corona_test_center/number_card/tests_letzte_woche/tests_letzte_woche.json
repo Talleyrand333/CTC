@@ -1,0 +1,23 @@
+{
+ "aggregate_function_based_on": "",
+ "creation": "2021-06-23 11:57:39.334125",
+ "docstatus": 0,
+ "doctype": "Number Card",
+ "document_type": "CTC Lab Test",
+ "dynamic_filters_json": "[]",
+ "filters_json": "[[\"CTC Lab Test\",\"status\",\"=\",\"Submitted\",false],[\"CTC Lab Test\",\"test_time\",\"Timespan\",\"last week\",false]]",
+ "function": "Count",
+ "idx": 0,
+ "is_public": 0,
+ "is_standard": 1,
+ "label": "Tests letzte Woche",
+ "modified": "2022-01-02 09:02:54.841812",
+ "modified_by": "Administrator",
+ "module": "Corona Test Center",
+ "name": "Tests letzte Woche",
+ "owner": "Administrator",
+ "report_function": "Sum",
+ "show_percentage_stats": 0,
+ "stats_time_interval": "Daily",
+ "type": "Document Type"
+}

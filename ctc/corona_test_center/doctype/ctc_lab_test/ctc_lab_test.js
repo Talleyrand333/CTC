@@ -2,6 +2,7 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('CTC Lab Test', {
+
 	patient: function(frm){
 		frappe.call({
 			method:'ctc.corona_test_center.doctype.ctc_lab_test.ctc_lab_test.fetch_patient_status',
@@ -9,8 +10,14 @@ frappe.ui.form.on('CTC Lab Test', {
 				'doc':frm.doc
 			},
 			callback:r=>{
-				r.message == true ? frm.doc.subscription = "Active":frm.doc.subscription = "Inactive"
+				r.message['active'] == true ? frm.doc.subscription = "Active":frm.doc.subscription = "Inactive"
+				frm.set_value('report_preference',r.message['default_report_preference'])
+				//frm.set_value('location',r.message['location'])
+				
 				frm.refresh_field('subscription')
+				frm.refresh_field('report_preference')
+				frm.refresh_field('location')
+
 			}
 		})
 	},
@@ -54,8 +61,120 @@ frappe.ui.form.on('CTC Lab Test', {
 					}
 				});
 			})
+
+			//add send print button
+			frm.add_custom_button(__('Send Print'),function(){
+
+				frappe.call({
+					'method':'printnode_integration.events.print_via_printnode',
+					args:{
+						'doctype':frm.doc.doctype,
+						'docname':frm.doc.name,
+						'docevent':'Submit'
+					},
+					freeze:true,
+				    'freeze_message': __('Sending documents to the printer'),
+					callback:function(){
+						frappe.msgprint(__('Document Sent to Printer'))
+					}
+				})
+
+			})
+			frm.add_custom_button(__("Download PDF"),()=>{
+				//download pdf
+				frappe.call({
+					method: 'ctc.corona_test_center.doctype.ctc_lab_test.ctc_lab_test.get_lab_test_pdf_link',
+					args:{
+						
+						'doctype':cur_frm.doc.doctype,
+						'doc':cur_frm.doc,
+						'name':cur_frm.doc.name,
+						
+					},
+					callback:function(message){
+						var url = message['message']
+						download_file(url,'kask.pdf')
+						//window.open(url,'_blank')
+					}
+				})
+			})
 		}
 		
+	},
+	report_preference:function(frm){
+		if (frm.doc.report_preference == 'Print'){
+			cur_frm.set_value('print_on_submit',1)
+			cur_frm.refresh_field('print_on_submit')
+		} else {
+			cur_frm.set_value('print_on_submit',0)
+			cur_frm.refresh_field('print_on_submit')
+		}
+	},
+	before_save:function(frm){
+		frappe.call({
+			method: 'ctc.app.create_queue',
+			args: {
+				'ctc_doc':cur_frm.doc
+			},
+			callback: function (r) {
+				cur_frm.refresh_fields()
+			}
+		});
+		// if(frm.doc.workflow_state=='Tested'){
+		// 	//set test_time
+		// 	console.log('hello')
+		// 	cur_frm.set_value('test_time',frappe.datetime.get_datetime_as_string())
+		// 	cur_frm.refresh_field('test_time')
+		// }
+		
+	},
+	
+
+	after_workflow_action:function(frm){
+		// if (frm.doc.workflow_state = 'Submitted'){
+		// 	//cur_frm.doc.workflow_state = 'Submitted'
+		// 	setTimeout(function(){cur_frm.print_doc() }, 2500);
+		if(frm.doc.workflow_state =='Tested'){
+			//set test_time
+			cur_frm.set_value('test_time',frappe.datetime.get_datetime_as_string())
+			cur_frm.refresh_field('test_time')
+			cur_frm.save()
+			cur_frm.refresh_fields()
+		
+		}
 	}
 	
 });
+
+
+/* Helper function */
+function download_file(fileURL, fileName) {
+	// for non-IE
+	if (!window.ActiveXObject) {
+		var save = document.createElement('a');
+		save.href = fileURL;
+		save.target = '_blank';
+		var filename = fileURL.substring(fileURL.lastIndexOf('/')+1);
+		save.download = fileName || filename;
+		   if ( navigator.userAgent.toLowerCase().match(/(ipad|iphone|safari)/) && navigator.userAgent.search("Chrome") < 0) {
+				document.location = save.href; 
+	// window event not working here
+			}else{
+				var evt = new MouseEvent('click', {
+					'view': window,
+					'bubbles': true,
+					'cancelable': false
+				});
+				save.dispatchEvent(evt);
+				(window.URL || window.webkitURL).revokeObjectURL(save.href);
+			}   
+	}
+	
+	// for IE < 11
+	else if ( !! window.ActiveXObject && document.execCommand)     {
+		var _window = window.open(fileURL, '_blank');
+		_window.document.close();
+		_window.document.execCommand('SaveAs', true, fileName || fileURL)
+		_window.close();
+	}
+}

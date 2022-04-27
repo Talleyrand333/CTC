@@ -1,0 +1,66 @@
+{
+ "category": "Modules",
+ "charts": [],
+ "creation": "2021-05-29 21:33:06.929930",
+ "developer_mode_only": 0,
+ "disable_user_customization": 0,
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "extends_another_page": 0,
+ "hide_custom": 0,
+ "icon": "healthcare",
+ "idx": 0,
+ "is_default": 0,
+ "is_standard": 1,
+ "label": "Corona Test Center",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Settings",
+   "link_to": "CTC Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2021-07-07 20:32:16.204141",
+ "modified_by": "Administrator",
+ "module": "Corona Test Center",
+ "name": "Corona Test Center",
+ "owner": "Administrator",
+ "pin_to_bottom": 0,
+ "pin_to_top": 1,
+ "shortcuts": [
+  {
+   "doc_view": "List",
+   "label": "Patient",
+   "link_to": "CTC Patient",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "List",
+   "label": "Lab Test",
+   "link_to": "CTC Lab Test",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "Calendar",
+   "label": "Patient Appointments",
+   "link_to": "CTC Lab Test",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "New",
+   "label": "New",
+   "link_to": "CTC Patient",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "Dashboard",
+   "label": "Dashboard",
+   "link_to": "CoronaTestPoint",
+   "type": "Dashboard"
+  }
+ ]
+}

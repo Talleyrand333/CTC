@@ -1,6 +1,5 @@
 {
  "actions": [],
- "autoname": "CTC-LT-.####",
  "creation": "2021-05-27 21:02:02.202518",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -10,17 +9,23 @@
   "test_name",
   "appointment",
   "send_notification_in_english",
+  "send_to_cwa",
+  "cwa_options",
+  "print_on_submit",
   "column_break_5",
   "location",
   "report_status",
   "report_preference",
   "test_time",
   "status",
+  "email_sender",
   "patient_information_section",
   "full_name",
   "street",
   "zipcode",
   "phone_number",
+  "label_image",
+  "label_path",
   "column_break_15",
   "subscription",
   "hash_content",
@@ -32,7 +37,8 @@
   "intro_email_sent",
   "appointment_end",
   "qr_code",
-  "qr_code_path"
+  "qr_code_path",
+  "lab_test_hash"
  ],
  "fields": [
   {
@@ -54,19 +60,22 @@
   {
    "fieldname": "appointment",
    "fieldtype": "Datetime",
+   "hidden": 1,
    "label": "Appointment"
   },
   {
+   "description": "5=Pending,6=Negative,7=Postive,8=Invalid",
    "fieldname": "report_status",
    "fieldtype": "Select",
    "label": "Report Status",
-   "options": "Negative\nPositive\nFaulty"
+   "options": "\nNegative\nPositive\nInvalid\nPending\nFaulty"
   },
   {
    "fieldname": "column_break_5",
    "fieldtype": "Column Break"
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "report_preference",
    "fieldtype": "Select",
    "label": "Report Preference",
@@ -74,14 +83,13 @@
   },
   {
    "fieldname": "location",
-   "fieldtype": "Select",
+   "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Location",
-   "options": "McDonalds\nShishaBar",
+   "options": "CTC Location",
    "reqd": 1
   },
   {
-   "default": "now",
    "fieldname": "test_time",
    "fieldtype": "Datetime",
    "label": "Test Date"
@@ -175,10 +183,15 @@
    "label": "Street Number"
   },
   {
+   "allow_on_submit": 1,
+   "default": "Draft",
    "fieldname": "status",
    "fieldtype": "Select",
+   "hidden": 1,
    "label": "Status",
-   "options": "Draft\nTested\nSubmitted\nCancelled"
+   "no_copy": 1,
+   "options": "\nDraft\nTested\nSubmitted\nCancelled",
+   "read_only": 1
   },
   {
    "default": "0",
@@ -189,11 +202,13 @@
   {
    "fieldname": "subscription",
    "fieldtype": "Select",
+   "hidden": 1,
    "label": "Subscription Status",
    "options": "\nActive\nInactive",
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "qr_code",
    "fieldtype": "Image",
    "label": "QR Code",
@@ -206,17 +221,67 @@
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "qr_code_path",
    "fieldtype": "Data",
-   "hidden": 1,
-   "label": "QR Code Path",
+   "label": "QR Code Path"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "lab_test_hash",
+   "fieldtype": "Data",
+   "label": "Lab Test Hash",
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "description": "send patient results to CWA Server",
+   "fieldname": "send_to_cwa",
+   "fieldtype": "Check",
+   "label": "Send to CWA",
+   "options": "1"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "default": "0",
+   "description": "Will send document directly to printer once submitted",
+   "fieldname": "print_on_submit",
+   "fieldtype": "Check",
+   "label": "Print On Submit"
+  },
+  {
+   "default": "Send without Personal Data",
+   "depends_on": "eval:doc.send_to_cwa==1",
+   "fieldname": "cwa_options",
+   "fieldtype": "Select",
+   "label": "CWA Options",
+   "options": "Send without Personal Data\nSend with Personal Data"
+  },
+  {
+   "fieldname": "label_image",
+   "fieldtype": "Image",
+   "label": "Label Image",
+   "options": "label_path",
+   "read_only": 1
+  },
+  {
+   "fieldname": "label_path",
+   "fieldtype": "Data",
+   "label": "Label Path"
+  },
+  {
+   "description": "Email Account to use as sender",
+   "fieldname": "email_sender",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Email Sender",
+   "options": "Email Account"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-11-15 16:27:13.250880",
+ "modified": "2022-01-29 00:06:52.150517",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Lab Test",

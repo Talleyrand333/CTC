@@ -1,0 +1,75 @@
+{
+ "actions": [],
+ "autoname": "format:QUE-{MM}{YYYY}-{#####}",
+ "creation": "2022-01-16 07:32:24.105186",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "ctc_lab_test",
+  "print_on_submit",
+  "status",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "ctc_lab_test",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "CTC Lab Test",
+   "options": "CTC Lab Test",
+   "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Draft\nIn Progress\nReady To Pick Up\nPicked Up\nSubmitted\nCancelled",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Queue",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "print_on_submit",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Print on Submit",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2022-01-17 09:09:41.946820",
+ "modified_by": "Administrator",
+ "module": "Corona Test Center",
+ "name": "Queue",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

@@ -5,22 +5,34 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "email_templates_section",
   "positive_email_template",
   "positive_english_template",
+  "generate_print_label",
+  "encrypt_ctc_lab_test_attachment",
+  "password_policy",
   "column_break_2",
   "negative_email_template",
   "negative_english_template",
+  "print_format_for_english_notification",
+  "default_email_sender",
+  "email_id",
   "section_break_4",
   "positive_sms",
   "positive_english_sms",
   "column_break_5",
   "negative_sms",
   "negative_english_sms",
-  "print_format_for_english_notification",
+  "section_break_21",
   "cwa_certificate",
   "cwa_certificate_key",
   "qr_code_location",
-  "certificate_passphrase"
+  "column_break_17",
+  "certificate_passphrase",
+  "qr_code_url",
+  "ctc_api_url",
+  "section_break_19",
+  "ctc_location"
  ],
  "fields": [
   {
@@ -55,7 +67,8 @@
   },
   {
    "fieldname": "section_break_4",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "SMS Templates"
   },
   {
    "fieldname": "positive_english_template",
@@ -104,12 +117,79 @@
    "fieldname": "certificate_passphrase",
    "fieldtype": "Password",
    "label": "Certificate Passphrase"
+  },
+  {
+   "fieldname": "qr_code_url",
+   "fieldtype": "Data",
+   "label": "QR CODE URL"
+  },
+  {
+   "fieldname": "ctc_api_url",
+   "fieldtype": "Data",
+   "label": "CTC API URL"
+  },
+  {
+   "fieldname": "section_break_19",
+   "fieldtype": "Section Break",
+   "label": "Locations"
+  },
+  {
+   "fieldname": "ctc_location",
+   "fieldtype": "Table",
+   "label": "CTC Location",
+   "options": "CTC Lab Test Location Table"
+  },
+  {
+   "fieldname": "section_break_21",
+   "fieldtype": "Section Break",
+   "label": "CWA Integration"
+  },
+  {
+   "fieldname": "column_break_17",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "email_templates_section",
+   "fieldtype": "Section Break",
+   "label": "Email Templates"
+  },
+  {
+   "default": "1",
+   "fieldname": "generate_print_label",
+   "fieldtype": "Check",
+   "label": "Generate Print Label"
+  },
+  {
+   "depends_on": "eval:doc.encrypt_ctc_lab_test_attachment==1",
+   "description": "will use field [date_of_birth] selected as password to file\npassword is in format <b>ddmmyyyy</b>",
+   "fieldname": "password_policy",
+   "fieldtype": "Select",
+   "label": "Password Policy",
+   "options": "date_of_birth"
+  },
+  {
+   "default": "0",
+   "fieldname": "encrypt_ctc_lab_test_attachment",
+   "fieldtype": "Check",
+   "label": "Encrypt CTC Lab Test Attachments"
+  },
+  {
+   "fieldname": "default_email_sender",
+   "fieldtype": "Link",
+   "label": "Default Email Sender",
+   "options": "Email Account"
+  },
+  {
+   "fieldname": "email_id",
+   "fieldtype": "Data",
+   "label": "Email ID",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2021-11-15 14:55:56.413930",
+ "modified": "2022-01-17 14:09:01.609965",
  "modified_by": "Administrator",
  "module": "Corona Test Center",
  "name": "CTC Settings",

@@ -7,14 +7,17 @@ from frappe.model.document import Document
 from six import string_types
 import json,datetime
 from frappe.utils import get_datetime
+from ctc.utils import generate_random
 class CTCPatient(Document):
 
 	def validate(self):
 		self.full_name = ' '.join(filter(lambda x: x, [self.first_name, self.last_name]))
 		self.validate_zip_code()
 		self.validate_country_code()
-		self.create_labtest()
+		self.check_duplicate()
+		#self.create_labtest()
 		self.set_subscription_status()
+		#self.id_number = generate_random()
 	
 	def set_subscription_status(self):
 		import datetime
@@ -27,7 +30,23 @@ class CTCPatient(Document):
 					active = True
 		self.active_subscription = "Active" if active else "Inactive"
 	
+	def check_duplicate(self):
+		if not self.is_new():return
+		conditions = ""
+		if self.first_name:				 
+			conditions += " WHERE first_name='%s'" %self.first_name
+		if self.last_name:
+			conditions += " AND last_name= '%s'" %self.last_name
+		if self.date_of_birth:
+			conditions += " AND date_of_birth= '%s'" %self.date_of_birth
+		# if self.phone_number:
+		# 	conditions += " AND phone_number= '%s'" %self.phone_number
+		
 
+		result = frappe.db.sql(""" SELECT name from `tabCTC Patient` {conditions} """.format(conditions=conditions),as_dict=1)
+		print(result)
+		if result:
+			frappe.throw('Duplicate Patient please check details')
 
 	def autoname(self):
 		self.full_name = ' '.join(filter(lambda x: x, [self.first_name, self.last_name]))

@@ -5,12 +5,14 @@ import frappe
 from frappe import _
 from frappe.utils import get_datetime
 from frappe.model.document import Document
+from frappe.model.naming import make_autoname
 from six import string_types
 import pytz
 
 class CTCLabTest(Document):
 
     def fetch_api_arguments(self):
+        return
         #Fetch all the required information for creating the API
         api_arguments = {}
         api_arguments['fn'] = frappe.get_value("CTC Patient",self.patient,'first_name')
@@ -23,6 +25,7 @@ class CTCLabTest(Document):
         return api_arguments
     
     def generate_base64(self,api_args):
+        return
         #Generate a base63 encoded character and a QRCode Image for the rest api
         import base64,json,qrcode
         from io import BytesIO
@@ -45,13 +48,14 @@ class CTCLabTest(Document):
             })
         _file.flags.ignore_duplicate_entry_error=1
         _file.save(ignore_permissions=True)
-        self.qr_code_path = "/"+'private/files/'+prop_name
+        #self.qr_code_path = "/"+'private/files/'+prop_name
         # self.save()
         frappe.db.commit()
 
 
     def generate_hash(self,api_args):
         import hashlib
+        return
         #Generate a Hash256 chracter from a dict of # separated values
         final_stirng = ""
         final_stirng+=api_args['dob']+"#"
@@ -71,16 +75,37 @@ class CTCLabTest(Document):
         
 
     def autoname(self):
-        #Generate a random 7 character string that starts with the letter T
-        prop_name = "T"+self.generate_code()
-        while frappe.db.exists(self.doctype,prop_name):
-            prop_name = "T"+self.generate_code()
-        self.name = prop_name
-        return
+        import random,string
         
-
-
+        #Generate a random name using location abbr and random numbers 
+        rand_digits =  ''.join(random.choices(string.digits, k = 6))
+        abbr = 'CTC-LT'
+        if self.location:
+            #get_abbr from ctc location table in ctc settings
+            abbr_ = frappe.db.get_value('CTC Lab Test Location Table',{'location':self.location},'abbreviation')
+            if abbr_:
+                abbr = abbr_
+        self.name = (abbr + '.' +'####')
+        self.name = make_autoname(abbr + '.####','',self)
+       
+    
+    def generate_lab_test_code(self):
+        if self.label_path:return
+        from ctc.utils import generate_lab_code
+        generate = frappe.db.get_single_value('CTC Settings','generate_print_label')
+        id_number = frappe.db.get_value('CTC Patient',self.patient,'id_number')
+        # if not id_number:
+        #     from ctc.utils import generate_random
+        #     id_number = generate_random()
+        #     frappe.db.set_value('CTC Patient',self.patient,'id_number',id_number)
+        if generate:
+            
+            label_path = generate_lab_code(self.name)
+            self.label_path = label_path
+            
+  
     def generate_code(self,l=None,is_hex=True):
+        return
         #Generate a string of random characters of the required length and format, it has been defaulted to 6 characters in base 10
         import string,random
         length_= 6 if not l else int(l)
@@ -95,14 +120,61 @@ class CTCLabTest(Document):
         return(txn_)
 
     def validate(self):
+        #create_queue(self)
         api_args = self.fetch_api_arguments()
-        self.generate_base64(api_args)
-        if self._action=='submit':
-            send_email_to_patient(self)
-            send_sms_to_patient(self)
-            
+        #self.generate_base64(api_args)
+       
         
-    
+        if self.status =='Tested':
+            self.generate_lab_test_code()
+            #send label to printer
+            #check if print_job exists for lab test
+            if not frappe.db.exists('Print Node Job',{'ref_type':self.doctype,'ref_name':self.name,'print_on':'Tested'}):
+                from printnode_integration.events import print_via_printnode
+                print_via_printnode(self.doctype,self.name,'Tested')
+        
+        # if self.has_value_changed('status') and self.status == 'Tested':
+        #     #update the test date
+        #     test_time = frappe.utils.get_datetime_str(frappe.utils.get_datetime())
+        #     frappe.db.set_value(self.doctype,self.name,'test_time',test_time)
+        #     frappe.db.commit()
+        #     self.test_time = test_time
+            
+
+            ##send to pos printer if report status is Print and docevent is Tested
+            if not frappe.db.exists('Print Node Job',{'ref_type':self.doctype,'ref_name':self.name,'print_on':'POS'}) and self.print_on_submit:
+                from printnode_integration.events import print_via_printnode
+                print_via_printnode(self.doctype,self.name,'POS')
+            
+            
+
+    def on_submit(self):
+        if frappe.db.exists({'doctype': 'Queue','ctc_lab_test': self.name}):
+            que_doc=frappe.get_doc('Queue',{'ctc_lab_test':self.name})
+            que_doc.status='Ready To Pick Up'
+            que_doc.submit()
+            que_doc.notify_update()
+        self.generate_qr_code()
+        if not self.report_status:
+            frappe.throw('You must set a report status before submitting')
+
+        
+    def on_submit(self):
+        frappe.enqueue(method='ctc.corona_test_center.doctype.ctc_lab_test.ctc_lab_test.send_communication',queue='short',doc=self)
+        # send_email_to_patient(self)
+        # send_sms_to_patient(self)
+
+    def generate_qr_code(self):
+        if self.send_to_cwa and not self.lab_test_hash:
+        #if self.report_status and self.report_status != "Positive":
+            from ctc.utils import generate_qr_code_and_attach
+            a = generate_qr_code_and_attach(self.name)
+            self.qr_code_path = a['file_url'] 
+            self.lab_test_hash = a['lab_test_hash']
+            
+
+           
+            
     def on_cancel(self):
         self.status = "Cancelled"
 
@@ -127,6 +199,31 @@ class CTCLabTest(Document):
         now=datetime.datetime.now(tz)
         self.test_time = datetime.datetime(now.year,now.month,now.day,now.hour,now.minute,now.second)
 
+
+#def create_queue(doc):
+#    if doc.status=='Tested' and doc.print_on_submit==1:
+#        if frappe.db.exists({'doctype': 'Queue','ctc_lab_test': doc.name}):
+#            que_doc=frappe.get_doc('Queue',{'ctc_lab_test':doc.name})
+#        else:
+#            que_doc = frappe.get_doc({
+#                'doctype': 'Queue',
+#                'ctc_lab_test': doc.name
+#            })
+#            que_doc.insert()
+#        que_doc.status='In Progress'
+#        que_doc.submit()
+#        que_doc.notify_update()
+#    elif doc.status=='Submitted' and doc.docstatus==1:
+#        if frappe.db.exists({'doctype': 'Queue','ctc_lab_test': doc.name}):
+#            que_doc=frappe.get_doc('Queue',{'ctc_lab_test':doc.name})
+#            que_doc.status='Ready To Pick Up'
+#            que_doc.submit()
+#            que_doc.notify_update()
+
+def send_communication(doc):
+    send_email_to_patient(doc)
+    send_sms_to_patient(doc)
+
 @frappe.whitelist()
 def fetch_patient_status(doc):
     import datetime
@@ -136,11 +233,13 @@ def fetch_patient_status(doc):
     active = False
     existing_subs = frappe.get_all("Patient Subscription",{'patient':doc.patient},['start_date','end_date'])
     today = datetime.datetime.now()
+    default_report_preference = frappe.db.get_value('CTC Patient',doc.patient,'report_preference')
+    #location = frappe.db.get_value('CTC Patient',doc.patient,'location')
     if existing_subs:
         for each in existing_subs:
             if get_datetime(each['start_date']) <= today and get_datetime(each['end_date']) > today:
                 active = True
-    return active
+    return {'active':active,'default_report_preference':default_report_preference}
     
 
 @frappe.whitelist()
@@ -175,11 +274,27 @@ def send_sms_to_patient(doc):
 
 @frappe.whitelist()
 def send_email_to_patient(doc):
+    from ctc.utils import get_pdf_mod_for_download
     if isinstance(doc,string_types):
         doc = json.loads(doc)
         doc= frappe.get_doc(doc)
-    if doc.report_preference=="Email" and doc.report_status!='Faulty':
+    if doc.report_preference=="Email" or 'Print' and doc.report_status!='Faulty':
         template = frappe.get_doc("CTC Settings")
+        password = None
+        
+        if template.default_email_sender:
+            sender = frappe.db.get_value('Email Account',template.default_email_sender,'email_id')
+        else:
+            sender = frappe.db.get_value('Email Account',{'default_incoming':1},'email_id')
+        
+        if template.encrypt_ctc_lab_test_attachment:
+        #get_criteria #date of birth is hardcoded
+            if isinstance(doc.date_of_birth,string_types):
+                password_list = doc.date_of_birth.split('-')
+                password = password_list[2] + password_list[1] + password_list[0]
+                
+            else:
+                password = datetime.datetime.strftime(doc.date_of_birth,"%d%m%Y")
         if not(template.get('postive_email_template') or template.get('negative_email_template')):
             frappe.throw(_("Please ensure that all template fields in CTC Settings page are filled"))
         positive = frappe.get_doc("Email Template",template.positive_email_template) 
@@ -191,26 +306,44 @@ def send_email_to_patient(doc):
         formated_date = datetime.datetime.strftime(date_,"%d.%m.%Y")
         data['formated_date']=formated_date
         message = positive if doc.report_status =="Positive" else negative
-        
+
+        pdf_html = frappe.get_print(doc.doctype, doc.name,doc=doc,password=password)
+        pdf_data = get_pdf_mod_for_download(pdf_html,doc=doc,output={'password':password}) 
+
+        out = {
+            "fname": doc.name + ".pdf",
+            "fcontent": pdf_data
+	    }
         email_args = {
                 "recipients": [doc.email],
                 "message": frappe.render_template(message.response,data),
                 "subject": message.subject,
-                "attachments": [frappe.attach_print("CTC Lab Test", doc.name)],
+                "attachments": [out],
                 "reference_doctype": doc.doctype,
                 "reference_name": doc.name
                 
         }
-        
+
         frappe.sendmail(recipients=email_args['recipients'],
         message=email_args['message'],
         subject=email_args['subject'],
         attachments=email_args['attachments'],
         reference_doctype=doc.doctype,
-        reference_name=doc.name)
+        reference_name=doc.name,
+        sender=sender)
+        frappe.clear_messages()
+
+        pdf_html = frappe.get_print(doc.doctype, doc.name,doc=doc,password=password,print_format=template.print_format_for_english_notification)
+        pdf_data =  get_pdf_mod_for_download(pdf_html,doc=doc,output={'password':password}) 
+        
+        out = {
+            "fname": doc.name + ".pdf",
+            "fcontent": pdf_data
+	    }
+        
         if negative2 and positive2:
             message2=  positive2 if doc.report_status =="Positive" else negative2
-            email_args['attachments2'] = [frappe.attach_print('CTC Lab Test',doc.name,file_name=doc.name,print_format=template.print_format_for_english_notification)]
+            email_args['attachments2'] = [out]
             email_args['eng_msg'] = frappe.render_template(message2.response,data)
             email_args['eng_sub'] = message2.subject
             
@@ -220,5 +353,21 @@ def send_email_to_patient(doc):
             subject=email_args['eng_sub'],
             attachments=email_args['attachments2'],
             reference_doctype=doc.doctype,
-            reference_name=doc.name)
+            reference_name=doc.name,
+            sender=sender)
+            frappe.clear_messages()
         return True
+
+
+
+
+
+@frappe.whitelist()
+def get_lab_test_pdf_link(doctype, doc, name, print_format='Standard', no_letterhead=0):
+	return '/api/method/ctc.utils.download_ctc_lab_test_pdf?doctype={doctype}&name={name}&doc={doc}&format={print_format}&no_letterhead={no_letterhead}'.format(
+		doctype = doctype,
+        doc = doc,
+        name = name,
+		print_format = print_format,
+		no_letterhead = no_letterhead
+	)

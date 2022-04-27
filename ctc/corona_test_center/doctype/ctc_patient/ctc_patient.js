@@ -4,8 +4,8 @@
 frappe.ui.form.on('CTC Patient', {
 	setup: function(frm){
 		if(frm.is_new()){
-			var d = new Date("January 1, 1990 00:00:00");
-			frm.doc.date_of_birth = d
+			//var d = new Date("January 1, 1990 00:00:00");
+			//frm.doc.date_of_birth = d
 			frm.doc.phone_number = '+49 '
 		}
 		else{
